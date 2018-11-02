@@ -27,7 +27,7 @@ public class ExampleNetworking extends DMBaseRequest {
     }
 
     @Override
-    protected void handleStatuses(final Context context, final JSONObject jsonObject, final DMIStatusHandleListener listener) {
+    protected void handleStatuses(final Context context, final int statusCode, final JSONObject jsonObject, final DMIStatusHandleListener listener) {
         try {
             final String status = jsonObject.getString("status");
             switch (status) {

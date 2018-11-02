@@ -4,13 +4,20 @@ import java.util.List;
 
 public final class SuccessListT<T> {
 
+    private int statusCode;
+
     private String status;
 
     private List<T> tList;
 
-    public SuccessListT(final String status, final List<T> tList) {
+    public SuccessListT(final int statusCode, final String status, final List<T> tList) {
+        this.statusCode = statusCode;
         this.status = status;
         this.tList = tList;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
     }
 
     public String getStatus() {

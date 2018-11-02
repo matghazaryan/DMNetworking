@@ -140,32 +140,32 @@ public class MainActivity extends AppCompatActivity {
         ExampleNetworking.getInstance().request(config, new DMINetworkListener<Configs, RequestError>() {
 
             @Override
-            public void onComplete(final String status, final JSONObject response) {
+            public void onComplete(final int statusCode, final String status, final JSONObject response) {
 
             }
 
             @Override
-            public void onComplete(final String status, final Configs configs) {
+            public void onComplete(final int statusCode, final String status, final Configs configs) {
 
             }
 
             @Override
-            public void onComplete(final String status, final List<Configs> configs) {
+            public void onComplete(final int statusCode, final String status, final List<Configs> configs) {
 
             }
 
             @Override
-            public void onError(final String status, final JSONObject response) {
+            public void onError(final int statusCode, final String status, final JSONObject response) {
 
             }
 
             @Override
-            public void onError(final String status, final RequestError error) {
+            public void onError(final int statusCode, final String status, final RequestError error) {
 
             }
 
             @Override
-            public void onError(final JSONObject response) {
+            public void onError(final int statusCode, final JSONObject response) {
 
             }
 

@@ -21,20 +21,20 @@ abstract class DMBaseNetworking extends DMBaseHelper {
 
                 showLogs(config.getUrl(), jsonObject);
 
-                handleStatuses(config.getContext(), jsonObject, new DMIStatusHandleListener() {
+                handleStatuses(config.getContext(),statusCode,  jsonObject, new DMIStatusHandleListener() {
                     @Override
                     public void onComplete(final String status, final JSONObject jsonObject) {
-                        onParseComplete(status, jsonObject, config.getParserConfigs(), listener);
+                        onParseComplete(statusCode, status, jsonObject, config.getParserConfigs(), listener);
                     }
 
                     @Override
                     public void onTokenUpdate() {
-                        requestForToken(config.getContext(), onTokenRefresh(), () -> doRequest(config, listener));
+                        requestForToken(statusCode, config.getContext(), onTokenRefresh(), () -> doRequest(config, listener));
                     }
 
                     @Override
                     public void onError(final String status, final JSONObject jsonObject) {
-                        onErrorParse(status, jsonObject, config.getErrorParserConfigs(), listener);
+                        onErrorParse(statusCode, status, jsonObject, config.getErrorParserConfigs(), listener);
                     }
                 });
             }
@@ -54,20 +54,20 @@ abstract class DMBaseNetworking extends DMBaseHelper {
 
                 showLogs(config.getUrl(), jsonObject);
 
-                handleStatuses(config.getContext(), jsonObject, new DMIStatusHandleListener() {
+                handleStatuses(config.getContext(), statusCode, jsonObject, new DMIStatusHandleListener() {
                     @Override
                     public void onComplete(final String status, final JSONObject jsonObject) {
-                        onParseComplete(status, jsonObject, config.getParserConfigs(), listener);
+                        onParseComplete(statusCode, status, jsonObject, config.getParserConfigs(), listener);
                     }
 
                     @Override
                     public void onTokenUpdate() {
-                        requestForToken(config.getContext(), onTokenRefresh(), () -> doJsonRequest(config, listener));
+                        requestForToken(statusCode, config.getContext(), onTokenRefresh(), () -> doJsonRequest(config, listener));
                     }
 
                     @Override
                     public void onError(final String status, final JSONObject jsonObject) {
-                        onErrorParse(status, jsonObject, config.getErrorParserConfigs(), listener);
+                        onErrorParse(statusCode, status, jsonObject, config.getErrorParserConfigs(), listener);
                     }
                 });
             }

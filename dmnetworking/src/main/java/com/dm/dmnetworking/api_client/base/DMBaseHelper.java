@@ -31,7 +31,7 @@ abstract class DMBaseHelper extends DMBase {
         return false;
     }
 
-    final void onFailure(final String pUrl, int statusCode, final Throwable throwable, final JSONObject errorResponse, final DMINetworkListener pListener) {
+    final void onFailure(final String pUrl, final int statusCode, final Throwable throwable, final JSONObject errorResponse, final DMINetworkListener pListener) {
         if (BuildConfig.DEBUG) {
             Log.wtf(getTagForLogger(), "{ERROR==>>}{" + pUrl + "}==>>" + errorResponse);
         }
@@ -41,10 +41,8 @@ abstract class DMBaseHelper extends DMBase {
             pListener.onNoInternetConnection();
         } else {
             status = String.valueOf(statusCode);
-            pListener.onError(status, errorResponse);
+            pListener.onError(statusCode, status, errorResponse);
         }
-
-
     }
 
     final void showLogs(final String pUrl, final JSONObject jsonObject) {
@@ -57,31 +55,31 @@ abstract class DMBaseHelper extends DMBase {
         }
     }
 
-    final <T, E> void onParseComplete(final String status, final JSONObject jsonObject, final DMParserConfigs<T> parserConfigs, final DMINetworkListener<T, E> listener) {
+    final <T, E> void onParseComplete(final int statusCode, final String status, final JSONObject jsonObject, final DMParserConfigs<T> parserConfigs, final DMINetworkListener<T, E> listener) {
         if (parserConfigs != null && parserConfigs.getAClass() != null && parserConfigs.getJsonKeyList() != null) {
             switch (DMJsonParser.getType(jsonObject, parserConfigs.getJsonKeyList())) {
                 case JSON_OBJECT:
-                    listener.onComplete(status, DMJsonParser.parseObject(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
+                    listener.onComplete(statusCode, status, DMJsonParser.parseObject(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
                     break;
                 case JSON_ARRAY:
-                    listener.onComplete(status, DMJsonParser.parseArray(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
+                    listener.onComplete(statusCode, status, DMJsonParser.parseArray(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
                     break;
             }
         }
-        listener.onComplete(status, jsonObject);
-        listener.onComplete(jsonObject);
+        listener.onComplete(statusCode, status, jsonObject);
+        listener.onComplete(statusCode, jsonObject);
     }
 
-    final <T, E> void onErrorParse(final String status, final JSONObject jsonObject, final DMParserConfigs<E> errorParserConfigs, final DMINetworkListener<T, E> listener) {
+    final <T, E> void onErrorParse(final int statusCode, final String status, final JSONObject jsonObject, final DMParserConfigs<E> errorParserConfigs, final DMINetworkListener<T, E> listener) {
         if (errorParserConfigs != null && errorParserConfigs.getAClass() != null && errorParserConfigs.getJsonKeyList() != null) {
             switch (DMJsonParser.getType(jsonObject, errorParserConfigs.getJsonKeyList())) {
                 case JSON_OBJECT:
-                    listener.onError(status, DMJsonParser.parseObject(jsonObject, errorParserConfigs.getAClass(), errorParserConfigs.getJsonKeyList()));
+                    listener.onError(statusCode, status, DMJsonParser.parseObject(jsonObject, errorParserConfigs.getAClass(), errorParserConfigs.getJsonKeyList()));
                     break;
             }
         }
-        listener.onError(jsonObject);
-        listener.onError(status, jsonObject);
+        listener.onError(statusCode, jsonObject);
+        listener.onError(statusCode, status, jsonObject);
     }
 
     public final void addHeaders(final Context context, final Map<String, String> headers) {

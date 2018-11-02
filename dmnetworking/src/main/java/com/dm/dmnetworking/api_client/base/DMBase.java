@@ -9,9 +9,9 @@ import org.json.JSONObject;
 
 abstract class DMBase implements DMIBaseMethod {
 
-    protected abstract void handleStatuses(final Context context, final JSONObject jsonObject, final DMIStatusHandleListener listener);
+    protected abstract void handleStatuses(final Context context,final int statusCode, final JSONObject jsonObject, final DMIStatusHandleListener listener);
 
     protected abstract int getRequestTimeOut();
 
-    abstract void requestForToken(final Context context, final DMBaseTokenHandler baseToken, final DMIBaseOnTokenRefreshListener listener);
+    abstract void requestForToken(final int statusCode, final Context context, final DMBaseTokenHandler baseToken, final DMIBaseOnTokenRefreshListener listener);
 }

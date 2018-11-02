@@ -60,20 +60,20 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
     }
 
     @Override
-    final void requestForToken(final Context context, final DMBaseTokenHandler baseToken, final DMIBaseOnTokenRefreshListener listener) {
+    final void requestForToken(final int statusCode, final Context context, final DMBaseTokenHandler baseToken, final DMIBaseOnTokenRefreshListener listener) {
         if (baseToken != null) {
             final DMBaseRequestConfig<Object, Object> config = new DMBaseRequestConfig<>(context)
                     .setUrl(baseToken.getRefreshTokenUrl());
 
             doRequest(config, new DMINetworkListener<Object, Object>() {
                 @Override
-                public void onComplete(final JSONObject response) {
+                public void onComplete(final int statusCode, final JSONObject response) {
                     baseToken.onTokenRefreshed(context, response);
                     listener.onRefresh();
                 }
 
                 @Override
-                public void onError(final JSONObject response) {
+                public void onError(final int statusCode, final JSONObject response) {
                     baseToken.onTokenRefreshFailure(context, response);
                 }
 
@@ -148,37 +148,37 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
 
             final DMINetworkListener<T, E> listener = new DMINetworkListener<T, E>() {
                 @Override
-                public void onComplete(final JSONObject response) {
+                public void onComplete(final int statusCode, final JSONObject response) {
                     responseMutableLiveData.setValue(response);
                 }
 
                 @Override
-                public void onComplete(final String status, final JSONObject response) {
-                    dmResponseMutableLiveData.setValue(new SuccessResponse(status, response));
+                public void onComplete(final int statusCode, final String status, final JSONObject response) {
+                    dmResponseMutableLiveData.setValue(new SuccessResponse(statusCode, status, response));
                 }
 
                 @Override
-                public void onComplete(final String status, final T t) {
-                    dmtMutableLiveData.setValue(new SuccessT<>(status, t));
+                public void onComplete(final int statusCode, final String status, final T t) {
+                    dmtMutableLiveData.setValue(new SuccessT<>(statusCode, status, t));
                 }
 
                 @Override
-                public void onComplete(final String status, final List<T> tList) {
-                    dmListTMutableLiveData.setValue(new SuccessListT<>(status, tList));
+                public void onComplete(final int statusCode, final String status, final List<T> tList) {
+                    dmListTMutableLiveData.setValue(new SuccessListT<>(statusCode, status, tList));
                 }
 
                 @Override
-                public void onError(final String status, final JSONObject response) {
-                    dmErrorResponseMutableLiveData.setValue(new ErrorResponse(status, response));
+                public void onError(final int statusCode, final String status, final JSONObject response) {
+                    dmErrorResponseMutableLiveData.setValue(new ErrorResponse(statusCode, status, response));
                 }
 
                 @Override
-                public void onError(final String status, final E e) {
-                    dmErrorEMutableLiveData.setValue(new ErrorE<>(status, e));
+                public void onError(final int statusCode, final String status, final E e) {
+                    dmErrorEMutableLiveData.setValue(new ErrorE<>(statusCode, status, e));
                 }
 
                 @Override
-                public void onError(final JSONObject response) {
+                public void onError(final int statusCode, final JSONObject response) {
                     errorResponseMutableLiveData.setValue(response);
                 }
 
