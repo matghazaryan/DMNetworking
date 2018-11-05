@@ -6,12 +6,16 @@ import android.util.Log;
 import com.dm.dmnetworking.api_client.constants.DMINetworkingConstants;
 import com.dm.dmnetworking.api_client.listeners.DMIClientListener;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestHandle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
@@ -66,7 +70,7 @@ public abstract class DMBaseAPIClient implements DMINetworkingConstants {
         }
     }
 
-    protected static void onFailureHandler(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable, final DMIClientListener listener) {
+    private static void onFailureHandler(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable, final DMIClientListener listener) {
         try {
             listener.onFailure(statusCode, headers, throwable, new JSONObject()
                     .put(STATUS_CODE, statusCode)
@@ -86,5 +90,41 @@ public abstract class DMBaseAPIClient implements DMINetworkingConstants {
         }
 
         return entity;
+    }
+
+    protected static <T, E> AsyncHttpResponseHandler getHandler(final DMBaseRequestConfig<T, E> config, final DMIClientListener listener) {
+        final AsyncHttpResponseHandler handler;
+        if (config.isEnableDownload()) {
+            handler = new FileAsyncHttpResponseHandler(config.getContext()) {
+                @Override
+                public void onSuccess(final int statusCode, final Header[] headers, final File file) {
+                    listener.onComplete(statusCode, headers, null, file);
+                }
+
+                @Override
+                public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final File file) {
+                    listener.onFailure(statusCode, headers, throwable, null);
+                }
+            };
+        } else {
+            handler = new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
+                    listener.onComplete(statusCode, headers, jsonObject, null);
+                }
+
+                @Override
+                public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
+                    listener.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
+                    onFailureHandler(statusCode, headers, responseString, throwable, listener);
+                }
+            };
+        }
+
+        return handler;
     }
 }

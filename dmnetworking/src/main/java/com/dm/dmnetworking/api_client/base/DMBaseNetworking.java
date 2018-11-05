@@ -1,12 +1,13 @@
 package com.dm.dmnetworking.api_client.base;
 
 import com.dm.dmnetworking.api_client.client.DMAPIClient;
-import com.dm.dmnetworking.api_client.client.DMJSONAPIClient;
 import com.dm.dmnetworking.api_client.listeners.DMIClientListener;
 import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
 import com.dm.dmnetworking.api_client.listeners.DMIStatusHandleListener;
 
 import org.json.JSONObject;
+
+import java.io.File;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -15,16 +16,24 @@ abstract class DMBaseNetworking extends DMBaseHelper {
 
     final <T, E> void doRequest(final DMBaseRequestConfig<T, E> config, final DMINetworkListener<T, E> listener) {
 
+        if (!config.isFullUrl()) {
+            config.setUrl(getFullUrl(config.getUrl()));
+        }
+
         DMAPIClient.makeRequest(config, new DMIClientListener() {
             @Override
-            public void onComplete(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
+            public void onComplete(final int statusCode, final Header[] headers, final JSONObject jsonObject, final File file) {
 
-                showLogs(config.getUrl(), jsonObject);
+                showLogs(config.getUrl(), jsonObject, file);
 
-                handleStatuses(config.getContext(),statusCode,  jsonObject, new DMIStatusHandleListener() {
+                handleStatuses(config.getContext(), statusCode, jsonObject, new DMIStatusHandleListener() {
                     @Override
                     public void onComplete(final String status, final JSONObject jsonObject) {
-                        onParseComplete(statusCode, status, jsonObject, config.getParserConfigs(), listener);
+                        if (file == null && jsonObject != null) {
+                            onParseComplete(statusCode, status, jsonObject, config.getParserConfigs(), listener);
+                        } else if (file != null) {
+                            listener.onComplete(statusCode, file);
+                        }
                     }
 
                     @Override
@@ -41,40 +50,7 @@ abstract class DMBaseNetworking extends DMBaseHelper {
 
             @Override
             public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
-                DMBaseNetworking.this.onFailure(config.getUrl(), statusCode, throwable, errorResponse, listener);
-            }
-        });
-    }
-
-    final <T, E> void doJsonRequest(final DMBaseRequestConfig<T, E> config, final DMINetworkListener<T, E> listener) {
-
-        DMJSONAPIClient.makeRequest(config, new DMIClientListener() {
-            @Override
-            public void onComplete(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
-
-                showLogs(config.getUrl(), jsonObject);
-
-                handleStatuses(config.getContext(), statusCode, jsonObject, new DMIStatusHandleListener() {
-                    @Override
-                    public void onComplete(final String status, final JSONObject jsonObject) {
-                        onParseComplete(statusCode, status, jsonObject, config.getParserConfigs(), listener);
-                    }
-
-                    @Override
-                    public void onTokenUpdate() {
-                        requestForToken(statusCode, config.getContext(), onTokenRefresh(), () -> doJsonRequest(config, listener));
-                    }
-
-                    @Override
-                    public void onError(final String status, final JSONObject jsonObject) {
-                        onErrorParse(statusCode, status, jsonObject, config.getErrorParserConfigs(), listener);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
-                DMBaseNetworking.this.onFailure(config.getUrl(), statusCode, throwable, errorResponse, listener);
+                DMBaseNetworking.this.onFailure(config, statusCode, throwable, errorResponse, listener);
             }
         });
     }

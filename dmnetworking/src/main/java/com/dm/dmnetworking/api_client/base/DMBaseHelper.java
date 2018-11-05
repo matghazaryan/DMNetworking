@@ -1,5 +1,6 @@
 package com.dm.dmnetworking.api_client.base;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,43 +13,72 @@ import com.dm.dmnetworking.parser.DMParserConfigs;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 
 abstract class DMBaseHelper extends DMBase {
 
-    private boolean isConnectedToInternet(final Context context) {
-        final ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            final NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null)
-                for (final NetworkInfo anInfo : info)
-                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
-                        return true;
-                    }
-        }
+    @SuppressLint("MissingPermission")
+    private static boolean isConnectedToInternet(final Context context) {
+        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
 
+            if (activeNetwork != null) {
+                // connected to the internet
+                switch (activeNetwork.getType()) {
+                    case ConnectivityManager.TYPE_WIFI:
+                        return true;
+                    case ConnectivityManager.TYPE_MOBILE:
+                        return true;
+                    default:
+                        break;
+                }
+            }
+        }
         return false;
     }
 
-    final void onFailure(final String pUrl, final int statusCode, final Throwable throwable, final JSONObject errorResponse, final DMINetworkListener pListener) {
-        if (BuildConfig.DEBUG) {
-            Log.wtf(getTagForLogger(), "{ERROR==>>}{" + pUrl + "}==>>" + errorResponse);
-        }
+    final <T, E> void onFailure(final DMBaseRequestConfig<T, E> config, final int statusCode, final Throwable throwable, final JSONObject errorResponse, final DMINetworkListener<T, E> listener) {
+        if (config != null) {
+            if (BuildConfig.DEBUG) {
+                Log.wtf(getTagForLogger(), "{ERROR==>>}{" + config.getUrl() + "}==>>" + errorResponse);
+            }
 
-        final String status;
-        if (throwable instanceof Exception) {
-            pListener.onNoInternetConnection();
-        } else {
-            status = String.valueOf(statusCode);
-            pListener.onError(statusCode, status, errorResponse);
+            final String status;
+            if (throwable instanceof UnknownHostException || throwable instanceof SocketException || throwable instanceof SocketTimeoutException) {
+                listener.onNoInternetConnection();
+            } else {
+                status = String.valueOf(statusCode);
+                listener.onError(statusCode, status, errorResponse);
+                listener.onError(statusCode, errorResponse);
+                try {
+                    if (config.getErrorParserConfigs() != null && config.getErrorParserConfigs().getAClass() != null) {
+                        listener.onError(statusCode, status, config.getErrorParserConfigs().getAClass().newInstance());
+                    }
+                } catch (IllegalAccessException | InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
-    final void showLogs(final String pUrl, final JSONObject jsonObject) {
+    final void showLogs(final String pUrl, final JSONObject jsonObject, final File file) {
         if (BuildConfig.DEBUG && isEnableLogger()) {
             try {
-                Log.wtf(getTagForLogger(), "{OK}==>>{" + pUrl + "}==>>" + jsonObject);
+                String logText = "";
+                if (jsonObject != null) {
+                    logText = jsonObject.toString();
+
+                } else if (file != null) {
+                    logText = file.getName();
+                }
+                Log.wtf(getTagForLogger(), "{OK}==>>{" + pUrl + "}==>>" + logText);
             } catch (final Exception e) {
                 e.printStackTrace();
             }
@@ -76,6 +106,12 @@ abstract class DMBaseHelper extends DMBase {
                 case JSON_OBJECT:
                     listener.onError(statusCode, status, DMJsonParser.parseObject(jsonObject, errorParserConfigs.getAClass(), errorParserConfigs.getJsonKeyList()));
                     break;
+                default:
+                    try {
+                        listener.onError(statusCode, status, errorParserConfigs.getAClass().newInstance());
+                    } catch (IllegalAccessException | InstantiationException e) {
+                        e.printStackTrace();
+                    }
             }
         }
         listener.onError(statusCode, jsonObject);
@@ -103,17 +139,16 @@ abstract class DMBaseHelper extends DMBase {
         DMBaseAPIClient.getClient(context).cancelAllRequests(mayInterruptIfRunning);
     }
 
-
     public final void cancelRequestsByTag(final Context context, final String requestTag, final boolean mayInterruptIfRunning) {
         DMBaseAPIClient.getClient(context).cancelRequestsByTAG(requestTag, mayInterruptIfRunning);
     }
 
-    protected boolean isNeedToMakeRequest(final Context context, final DMINetworkListener pListener) {
+    protected boolean isNeedToMakeRequest(final Context context, final DMINetworkListener listener) {
         boolean isHasInternetConnection = true;
 
         if (!isConnectedToInternet(context)) {
             isHasInternetConnection = false;
-            pListener.onNoInternetConnection();
+            listener.onNoInternetConnection();
         }
 
         return isHasInternetConnection;

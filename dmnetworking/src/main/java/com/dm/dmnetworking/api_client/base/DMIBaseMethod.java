@@ -1,7 +1,7 @@
 package com.dm.dmnetworking.api_client.base;
 
-
 import com.dm.dmnetworking.api_client.constants.DMINetworkingConstants;
+
 
 public interface DMIBaseMethod extends DMINetworkingConstants {
 

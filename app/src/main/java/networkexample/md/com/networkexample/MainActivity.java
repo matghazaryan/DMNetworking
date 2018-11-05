@@ -9,13 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.dm.dmnetworking.api_client.base.DMBaseRequestConfig;
 import com.dm.dmnetworking.api_client.base.DMLiveDataBag;
-import com.dm.dmnetworking.api_client.constants.DMINetworkingConstants;
 import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
 import com.dm.dmnetworking.parser.DMParserConfigs;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+//        if ( ContextCompat.checkSelfPermission( this, Manifest.permission.READ_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED ) {
 //        ArrayList<String> list = getAllShownImagesPath(this);
+//        }
 
         init();
     }
@@ -86,11 +88,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+//        final String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png";
+
 
         final DMBaseRequestConfig<Configs, RequestError> config = new DMBaseRequestConfig<Configs, RequestError>(getApplicationContext())
                 .setUrl(url)
+                .setFullUrl(url)
+//                .setEnableDownload(true)
                 .setJson(jsonObject)
-                .setMethod(DMINetworkingConstants.Method.POST)
+//                .setMethod(DMINetworkingConstants.Method.POST)
 //                .setParams(params)
 
                 .setParserConfigs(new DMParserConfigs<>(Configs.class, "data"))
@@ -136,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        request.getSuccessFile().observe(this, file -> {
+
+        });
+
 
         ExampleNetworking.getInstance().request(config, new DMINetworkListener<Configs, RequestError>() {
 
@@ -151,6 +161,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onComplete(final int statusCode, final String status, final List<Configs> configs) {
+
+            }
+
+            @Override
+            public void onComplete(final int statusCode, final JSONObject response) {
+
+            }
+
+            @Override
+            public void onComplete(final int statusCode, final File file) {
 
             }
 

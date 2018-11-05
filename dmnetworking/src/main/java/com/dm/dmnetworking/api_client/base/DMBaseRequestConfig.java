@@ -29,6 +29,10 @@ public final class DMBaseRequestConfig<T, E> {
 
     private String requestTag;
 
+    private boolean isEnableDownload;
+
+    private boolean isFullUrl;
+
     public DMBaseRequestConfig(final Context context) {
         this.context = context;
     }
@@ -40,6 +44,13 @@ public final class DMBaseRequestConfig<T, E> {
 
     public DMBaseRequestConfig<T, E> setUrl(final String url) {
         this.url = url;
+        isFullUrl = false;
+        return this;
+    }
+
+    public DMBaseRequestConfig<T, E> setFullUrl(final String fullUrl) {
+        this.url = fullUrl;
+        isFullUrl = true;
         return this;
     }
 
@@ -61,6 +72,15 @@ public final class DMBaseRequestConfig<T, E> {
     public DMBaseRequestConfig<T, E> setRequestTag(final String requestTag) {
         this.requestTag = requestTag;
         return this;
+    }
+
+    public DMBaseRequestConfig<T, E> setEnableDownload(final boolean enableDownload) {
+        isEnableDownload = enableDownload;
+        return this;
+    }
+
+    boolean isFullUrl() {
+        return isFullUrl;
     }
 
     /**
@@ -99,6 +119,18 @@ public final class DMBaseRequestConfig<T, E> {
         return requestTag;
     }
 
+    public boolean isEnableDownload() {
+        return isEnableDownload;
+    }
+
+    public boolean isJSONRequest() {
+        if (getParams() != null) {
+            return false;
+        }
+
+        return getJsonObject() != null;
+    }
+
     public Object getJsonObject() {
         return jsonObject;
     }
@@ -113,16 +145,18 @@ public final class DMBaseRequestConfig<T, E> {
     public RequestParams getRequestParams() {
         final RequestParams requestParams = new RequestParams();
 
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            if (entry.getValue() instanceof File) {
-                final File file = (File) entry.getValue();
-                try {
-                    requestParams.put(entry.getKey(), file);
-                } catch (final FileNotFoundException e) {
-                    e.printStackTrace();
+        if (params != null) {
+            for (final Map.Entry<String, Object> entry : params.entrySet()) {
+                if (entry.getValue() instanceof File) {
+                    final File file = (File) entry.getValue();
+                    try {
+                        requestParams.put(entry.getKey(), file);
+                    } catch (final FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    requestParams.put(entry.getKey(), entry.getValue());
                 }
-            } else {
-                requestParams.put(entry.getKey(), entry.getValue());
             }
         }
 

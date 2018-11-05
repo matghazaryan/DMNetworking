@@ -10,6 +10,8 @@ import com.dm.dmnetworking.api_client.base.model.success.SuccessT;
 
 import org.json.JSONObject;
 
+import java.io.File;
+
 
 public final class DMLiveDataBag<T, E> {
 
@@ -17,6 +19,7 @@ public final class DMLiveDataBag<T, E> {
     private LiveData<SuccessResponse> successResponse;
     private LiveData<SuccessT<T>> successT;
     private LiveData<SuccessListT<T>> successListT;
+    private LiveData<File> successFile;
 
     private LiveData<ErrorE<E>> errorE;
     private LiveData<ErrorResponse> errorResponse;
@@ -42,6 +45,10 @@ public final class DMLiveDataBag<T, E> {
 
     void setSuccessListT(final LiveData<SuccessListT<T>> successListT) {
         this.successListT = successListT;
+    }
+
+    void setSuccessFile(final LiveData<File> successFile) {
+        this.successFile = successFile;
     }
 
     void setErrorE(final LiveData<ErrorE<E>> errorE) {
@@ -74,6 +81,10 @@ public final class DMLiveDataBag<T, E> {
 
     public LiveData<SuccessListT<T>> getSuccessListT() {
         return successListT;
+    }
+
+    public LiveData<File> getSuccessFile() {
+        return successFile;
     }
 
     public LiveData<ErrorE<E>> getErrorE() {

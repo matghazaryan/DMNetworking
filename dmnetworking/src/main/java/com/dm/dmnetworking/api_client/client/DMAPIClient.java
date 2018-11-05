@@ -3,112 +3,82 @@ package com.dm.dmnetworking.api_client.client;
 import com.dm.dmnetworking.api_client.base.DMBaseAPIClient;
 import com.dm.dmnetworking.api_client.base.DMBaseRequestConfig;
 import com.dm.dmnetworking.api_client.listeners.DMIClientListener;
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import org.json.JSONObject;
-
-import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 
 public final class DMAPIClient extends DMBaseAPIClient {
 
-    public static <T, E> void makeRequest(final DMBaseRequestConfig<T, E> config, final DMIClientListener pListener) {
+    public static <T, E> void makeRequest(final DMBaseRequestConfig<T, E> config, final DMIClientListener listener) {
 
         showParams(config);
 
-        switch (config.getMethod()) {
-            case GET:
-                get(config, pListener);
-                break;
-            case PUT:
-                put(config, pListener);
-                break;
-            case DELETE:
-                delete(config, pListener);
-                break;
-            case POST:
-                post(config, pListener);
-                break;
+        final AsyncHttpResponseHandler handler = getHandler(config, listener);
+
+        if (config.isJSONRequest()) {
+            final StringEntity entity = setEntity(config.getJsonString());
+            switch (config.getMethod()) {
+                case GET:
+                    getJSON(config, entity, handler);
+                    break;
+                case PUT:
+                    putJSON(config, entity, handler);
+                    break;
+                case DELETE:
+                    deleteJSON(config, entity, handler);
+                    break;
+                case POST:
+                    postJSON(config, entity, handler);
+                    break;
+            }
+        } else {
+            switch (config.getMethod()) {
+                case GET:
+                    get(config, handler);
+                    break;
+                case PUT:
+                    put(config, handler);
+                    break;
+                case DELETE:
+                    delete(config, handler);
+                    break;
+                case POST:
+                    post(config, handler);
+                    break;
+            }
         }
     }
 
-    private static <T, E> void get(final DMBaseRequestConfig<T, E> config, final DMIClientListener pListener) {
-
-        requestHandler = getClient(config.getContext()).get(config.getUrl(), config.getRequestParams(), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
-                pListener.onComplete(statusCode, headers, jsonObject);
-            }
-
-            @Override
-            public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
-                pListener.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-
-            @Override
-            public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
-                onFailureHandler(statusCode, headers, responseString, throwable, pListener);
-            }
-        }).setTag(config.getRequestTag());
+    private static <T, E> void get(final DMBaseRequestConfig<T, E> config, final AsyncHttpResponseHandler handler) {
+        requestHandler = getClient(config.getContext()).get(config.getUrl(), config.getRequestParams(), handler).setTag(config.getRequestTag());
     }
 
-    private static <T, E> void post(final DMBaseRequestConfig<T, E> config, final DMIClientListener pListener) {
-
-        requestHandler = getClient(config.getContext()).post(config.getUrl(), config.getRequestParams(), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
-                pListener.onComplete(statusCode, headers, jsonObject);
-            }
-
-            @Override
-            public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
-                pListener.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-
-            @Override
-            public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
-                onFailureHandler(statusCode, headers, responseString, throwable, pListener);
-            }
-        }).setTag(config.getRequestTag());
+    private static <T, E> void post(final DMBaseRequestConfig<T, E> config, final AsyncHttpResponseHandler handler) {
+        requestHandler = getClient(config.getContext()).post(config.getUrl(), config.getRequestParams(), handler).setTag(config.getRequestTag());
     }
 
-    private static <T, E> void put(final DMBaseRequestConfig<T, E> config, final DMIClientListener pListener) {
-
-        requestHandler = getClient(config.getContext()).put(config.getUrl(), config.getRequestParams(), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
-                pListener.onComplete(statusCode, headers, jsonObject);
-            }
-
-            @Override
-            public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
-                pListener.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-
-            @Override
-            public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
-                onFailureHandler(statusCode, headers, responseString, throwable, pListener);
-            }
-        }).setTag(config.getRequestTag());
+    private static <T, E> void put(final DMBaseRequestConfig<T, E> config, final AsyncHttpResponseHandler handler) {
+        requestHandler = getClient(config.getContext()).put(config.getUrl(), config.getRequestParams(), handler).setTag(config.getRequestTag());
     }
 
-    private static <T, E> void delete(final DMBaseRequestConfig<T, E> config, final DMIClientListener pListener) {
+    private static <T, E> void delete(final DMBaseRequestConfig<T, E> config, final AsyncHttpResponseHandler handler) {
+        getClient(config.getContext()).delete(config.getUrl(), config.getRequestParams(), handler);
+    }
 
-        getClient(config.getContext()).delete(config.getUrl(), config.getRequestParams(), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
-                pListener.onComplete(statusCode, headers, jsonObject);
-            }
+    private static <T, E> void getJSON(final DMBaseRequestConfig<T, E> config, final StringEntity entity, final AsyncHttpResponseHandler handler) {
+        requestHandler = getClient(config.getContext()).get(config.getContext(), config.getUrl(), entity, APPLICATION_JSON, handler).setTag(config.getRequestTag());
+    }
 
-            @Override
-            public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
-                pListener.onFailure(statusCode, headers, throwable, errorResponse);
-            }
+    private static <T, E> void postJSON(final DMBaseRequestConfig<T, E> config, final StringEntity entity, final AsyncHttpResponseHandler handler) {
+        requestHandler = getClient(config.getContext()).post(config.getContext(), config.getUrl(), entity, APPLICATION_JSON, handler).setTag(config.getRequestTag());
+    }
 
-            @Override
-            public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
-                onFailureHandler(statusCode, headers, responseString, throwable, pListener);
-            }
-        });
+    private static <T, E> void putJSON(final DMBaseRequestConfig<T, E> config, final StringEntity entity, final AsyncHttpResponseHandler handler) {
+        requestHandler = getClient(config.getContext()).put(config.getContext(), config.getUrl(), entity, APPLICATION_JSON, handler).setTag(config.getRequestTag());
+    }
+
+    private static <T, E> void deleteJSON(final DMBaseRequestConfig<T, E> config, final StringEntity entity, final AsyncHttpResponseHandler handler) {
+        requestHandler = getClient(config.getContext()).delete(config.getContext(), config.getUrl(), entity, APPLICATION_JSON, handler);
     }
 }

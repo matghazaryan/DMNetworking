@@ -13,6 +13,7 @@ import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
             } else if (config.getContext() == null) {
                 throw new Exception("BaseRequestConfig: Context cannot be null");
             } else if (config.getUrl() == null) {
-                throw new Exception("BaseRequestConfig: Url cannot be null");
+                throw new Exception("BaseRequestConfig: Url or fullUrl cannot be null in same time");
             } else if (listener == null) {
                 throw new Exception("INetworkListener: DMINetworkListener cannot be null");
             } else if (config.getParams() == null && config.getJsonObject() != null) {
@@ -51,11 +52,8 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
             DMBaseAPIClient.setTag(getTagForLogger());
             DMBaseAPIClient.setEnableLogger(isEnableLogger());
 
-            if (config.getParams() != null) {
-                doRequest(config, listener);
-            } else if (config.getJsonObject() != null) {
-                doJsonRequest(config, listener);
-            }
+
+            doRequest(config, listener);
         }
     }
 
@@ -93,6 +91,7 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
         final MutableLiveData<SuccessResponse> dmResponseMutableLiveData = new MutableLiveData<>();
         final MutableLiveData<SuccessT<T>> dmtMutableLiveData = new MutableLiveData<>();
         final MutableLiveData<SuccessListT<T>> dmListTMutableLiveData = new MutableLiveData<>();
+        final MutableLiveData<File> dmFileMutableLiveData = new MutableLiveData<>();
 
 
         final MutableLiveData<ErrorE<E>> dmErrorEMutableLiveData = new MutableLiveData<>();
@@ -105,6 +104,7 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
         liveDataBag.setSuccessResponse(dmResponseMutableLiveData);
         liveDataBag.setSuccessT(dmtMutableLiveData);
         liveDataBag.setSuccessListT(dmListTMutableLiveData);
+        liveDataBag.setSuccessFile(dmFileMutableLiveData);
 
 
         liveDataBag.setErrorE(dmErrorEMutableLiveData);
@@ -120,7 +120,7 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
             } else if (config.getContext() == null) {
                 throw new Exception("BaseRequestConfig: Context cannot be null");
             } else if (config.getUrl() == null) {
-                throw new Exception("BaseRequestConfig: Url cannot be null");
+                throw new Exception("BaseRequestConfig: Url or fullUrl cannot be null in same time");
             } else if (config.getParams() == null && config.getJsonObject() != null) {
                 if (!(config.getJsonObject() instanceof JSONObject) && !(config.getJsonObject() instanceof JSONArray)) {
                     throw new Exception("BaseRequestConfig: Object must be JSONObject or JSONArray, now it is " + config.getJsonObject().getClass());
@@ -168,6 +168,11 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
                 }
 
                 @Override
+                public void onComplete(final int statusCode, final File file) {
+                    dmFileMutableLiveData.setValue(file);
+                }
+
+                @Override
                 public void onError(final int statusCode, final String status, final JSONObject response) {
                     dmErrorResponseMutableLiveData.setValue(new ErrorResponse(statusCode, status, response));
                 }
@@ -189,11 +194,7 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
             };
 
 
-            if (config.getParams() != null) {
-                doRequest(config, listener);
-            } else if (config.getJsonObject() != null) {
-                doJsonRequest(config, listener);
-            }
+            doRequest(config, listener);
         }
 
         return liveDataBag;

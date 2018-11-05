@@ -29,7 +29,10 @@ public class ExampleNetworking extends DMBaseRequest {
     @Override
     protected void handleStatuses(final Context context, final int statusCode, final JSONObject jsonObject, final DMIStatusHandleListener listener) {
         try {
-            final String status = jsonObject.getString("status");
+            String status = "";
+            if (jsonObject != null) {
+                status = jsonObject.getString("status");
+            }
             switch (status) {
                 case "INVALID_DATA":
                     listener.onError(status, jsonObject);
@@ -48,13 +51,24 @@ public class ExampleNetworking extends DMBaseRequest {
     }
 
     @Override
-    protected boolean isNeedToMakeRequest(final Context context, final DMINetworkListener pListener) {
-        return super.isNeedToMakeRequest(context, pListener);
+    protected boolean isNeedToMakeRequest(final Context context, final DMINetworkListener listener) {
+        return super.isNeedToMakeRequest(context, listener);
     }
 
     @Override
     protected int getRequestTimeOut() {
         return 20000;
+    }
+
+    @Override
+    protected String getFullUrl(final String methodUrl) {
+//        final String fullUrl = "BASE_URL" + "/api/" + methodUrl + "?deviceType=android&applicationId=123&applicationVersion=123&deviceScale=3x";
+        final String fullUrl = methodUrl;
+        if (true) {     // isUserLoggedIn
+            return fullUrl + "&jwt=" + "DLDHNRGSKCHNDKKD";          //token
+        }
+
+        return fullUrl;
     }
 
     @Override
@@ -69,7 +83,7 @@ public class ExampleNetworking extends DMBaseRequest {
 
     @Override
     public DMBaseTokenHandler onTokenRefresh() {
-        return new DMBaseTokenHandler("url") {
+        return new DMBaseTokenHandler("refreshUrl") {
 
             @Override
             protected void onTokenRefreshed(final Context context, final JSONObject jsonObject) {
