@@ -1,9 +1,9 @@
-#DMNetworking
+# DMNetworking
 
-###About DMNetworking Library
+### About DMNetworking Library
 DMNetworking Library is a powerful library for doing any type of networking in Android applications which is made on top of [AsyncHttpClient](http://loopj.com/android-async-http/) and [Jackson JSON parser](https://github.com/FasterXML/jackson)
 
-###How to integrate
+### How to integrate
 Add it in your root build.gradle at the end of repositories:
 
 	allprojects {
@@ -38,7 +38,7 @@ Add the dependency
 	    <version>1.1.1</version>
 	</dependency>
 	
-###Introduction
+### Introduction
 
 DMNetworking Library takes care of everything. All you have to do just make request and listen response.
 You can listen response in different ways:
@@ -53,7 +53,7 @@ You can listen response in different ways:
 
 If you don't know about [LiveData](https://developer.android.com/topic/libraries/architecture/livedata) I suggest to read about this.
 
-###Why use DMNetworking?
+### Why use DMNetworking?
 * Build your request by creating your own request **config**
 * Google announced **LiveData** and DMNetworking library gives you fastest way to get parse data converted to LiveData.
 * You can get response as an **Object** as well without LiveData.
@@ -73,10 +73,10 @@ If you don't know about [LiveData](https://developer.android.com/topic/libraries
 * Cancell all request
 
 
-###Find this project useful?
+### Find this project useful?
 Support us by clicking star button on the upper right of this page.
 
-###Usage
+### Usage
 
 1. Create your networking class it should be extended from ***DMBaseRequest***
 
@@ -173,7 +173,7 @@ Support us by clicking star button on the upper right of this page.
 		}
 		
 	
-###Overeide Method description
+### Overeide Method description
 Set your request timeout in milliseconds
 
 	@Override
@@ -252,7 +252,7 @@ if you're setting url from configs **setUrl("your-url")** than DMNetworking will
 
 If you're setting **setFullUrl("your-url")** than DMNetworking **NOT** calling **getFullUrl()**. It gives you chance to set you're own url if you want.
 
-###Setup configs 
+### Setup configs 
 
 For example if we have this json response
 
