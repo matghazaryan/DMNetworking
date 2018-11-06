@@ -10,7 +10,6 @@ public final class ErrorResponse {
 
     private JSONObject jsonObject;
 
-
     public ErrorResponse(final int statusCode, final String status, final JSONObject jsonObject) {
         this.statusCode = statusCode;
         this.status = status;

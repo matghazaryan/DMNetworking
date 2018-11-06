@@ -17,6 +17,7 @@ import java.io.File;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -90,9 +91,15 @@ abstract class DMBaseHelper extends DMBase {
             switch (DMJsonParser.getType(jsonObject, parserConfigs.getJsonKeyList())) {
                 case JSON_OBJECT:
                     listener.onComplete(statusCode, status, DMJsonParser.parseObject(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
+                    listener.onComplete(statusCode, status, new ArrayList<>());
                     break;
                 case JSON_ARRAY:
                     listener.onComplete(statusCode, status, DMJsonParser.parseArray(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
+                    try {
+                        listener.onComplete(statusCode, status, parserConfigs.getAClass().newInstance());
+                    } catch (IllegalAccessException | InstantiationException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }

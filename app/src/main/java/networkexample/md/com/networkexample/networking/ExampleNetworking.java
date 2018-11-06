@@ -61,9 +61,11 @@ public class ExampleNetworking extends DMBaseRequest {
     }
 
     @Override
-    protected String getFullUrl(final String methodUrl) {
-//        final String fullUrl = "BASE_URL" + "/api/" + methodUrl + "?deviceType=android&applicationId=123&applicationVersion=123&deviceScale=3x";
-        final String fullUrl = methodUrl;
+    protected String getFullUrl(final String url) {
+
+        //for example
+//        final String fullUrl = "BASE_URL" + "/api/" + url + "?deviceType=android&applicationId=123&applicationVersion=123&deviceScale=3x";
+        final String fullUrl = url;
         if (true) {     // isUserLoggedIn
             return fullUrl + "&jwt=" + "DLDHNRGSKCHNDKKD";          //token
         }

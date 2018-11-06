@@ -1,7 +1,11 @@
 package networkexample.md.com.networkexample.model;
 
 
-public class Configs {
+public class User {
 
     private String name;
+
+    public String getName() {
+        return name;
+    }
 }

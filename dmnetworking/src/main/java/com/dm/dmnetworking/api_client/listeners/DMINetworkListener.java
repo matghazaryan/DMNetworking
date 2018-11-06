@@ -1,5 +1,7 @@
 package com.dm.dmnetworking.api_client.listeners;
 
+import com.dm.dmnetworking.api_client.base.model.progress.FileProgress;
+
 import org.json.JSONObject;
 
 import java.io.File;
@@ -24,6 +26,10 @@ public interface DMINetworkListener<T, E> extends DMINetworkErrorListener<E> {
     }
 
     default void onComplete(final int statusCode, final File file) {
+
+    }
+
+    default void onFileProgress(final FileProgress fileProgress) {
 
     }
 }

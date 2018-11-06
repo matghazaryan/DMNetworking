@@ -13,7 +13,7 @@ abstract class DMBase implements DMIBaseMethod {
 
     protected abstract int getRequestTimeOut();
 
-    protected abstract String getFullUrl(final String methodUrl);
+    protected abstract String getFullUrl(final String url);
 
     abstract void requestForToken(final int statusCode, final Context context, final DMBaseTokenHandler baseToken, final DMIBaseOnTokenRefreshListener listener);
 }

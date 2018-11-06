@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 
 import com.dm.dmnetworking.api_client.base.model.error.ErrorE;
 import com.dm.dmnetworking.api_client.base.model.error.ErrorResponse;
+import com.dm.dmnetworking.api_client.base.model.progress.FileProgress;
 import com.dm.dmnetworking.api_client.base.model.success.SuccessListT;
 import com.dm.dmnetworking.api_client.base.model.success.SuccessResponse;
 import com.dm.dmnetworking.api_client.base.model.success.SuccessT;
@@ -20,6 +21,7 @@ public final class DMLiveDataBag<T, E> {
     private LiveData<SuccessT<T>> successT;
     private LiveData<SuccessListT<T>> successListT;
     private LiveData<File> successFile;
+    private LiveData<FileProgress> fileProgress;
 
     private LiveData<ErrorE<E>> errorE;
     private LiveData<ErrorResponse> errorResponse;
@@ -49,6 +51,10 @@ public final class DMLiveDataBag<T, E> {
 
     void setSuccessFile(final LiveData<File> successFile) {
         this.successFile = successFile;
+    }
+
+    void setFileProgress(final LiveData<FileProgress> fileProgress) {
+        this.fileProgress = fileProgress;
     }
 
     void setErrorE(final LiveData<ErrorE<E>> errorE) {
@@ -85,6 +91,10 @@ public final class DMLiveDataBag<T, E> {
 
     public LiveData<File> getSuccessFile() {
         return successFile;
+    }
+
+    public LiveData<FileProgress> getFileProgress() {
+        return fileProgress;
     }
 
     public LiveData<ErrorE<E>> getErrorE() {

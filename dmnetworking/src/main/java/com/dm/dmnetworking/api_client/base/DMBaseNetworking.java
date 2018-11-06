@@ -1,5 +1,6 @@
 package com.dm.dmnetworking.api_client.base;
 
+import com.dm.dmnetworking.api_client.base.model.progress.FileProgress;
 import com.dm.dmnetworking.api_client.client.DMAPIClient;
 import com.dm.dmnetworking.api_client.listeners.DMIClientListener;
 import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
@@ -46,6 +47,11 @@ abstract class DMBaseNetworking extends DMBaseHelper {
                         onErrorParse(statusCode, status, jsonObject, config.getErrorParserConfigs(), listener);
                     }
                 });
+            }
+
+            @Override
+            public void onFileProgress(final FileProgress progress) {
+                listener.onFileProgress(progress);
             }
 
             @Override

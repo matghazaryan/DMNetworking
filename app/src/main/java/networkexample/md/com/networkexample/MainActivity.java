@@ -9,18 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.dm.dmnetworking.api_client.base.DMBaseRequestConfig;
 import com.dm.dmnetworking.api_client.base.DMLiveDataBag;
+import com.dm.dmnetworking.api_client.base.model.progress.FileProgress;
 import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
 import com.dm.dmnetworking.parser.DMParserConfigs;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import networkexample.md.com.networkexample.model.Configs;
 import networkexample.md.com.networkexample.model.RequestError;
+import networkexample.md.com.networkexample.model.User;
 import networkexample.md.com.networkexample.networking.ExampleNetworking;
 
 public class MainActivity extends AppCompatActivity {
@@ -63,11 +63,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
 
-//        final String url = "http://www.mocky.io/v2/5bcdd38e2f00007600c855b8"; //object
-//        final String url = "http://www.mocky.io/v2/5bcdd4ab2f00005900c855c4"; //array
-//        final String url = "http://www.mocky.io/v2/5bcdd7c02f00006100c855d6"; //object empty
-        final String url = "http://www.mocky.io/v2/5bcf2bf33300008200c2486a"; //error list
-
+        final String url = "http://www.mocky.io/v2/5be14bc13000006300d9a8a5"; //object
+//        final String url = "http://www.mocky.io/v2/5be14e693000004e00d9a8b3"; //array
+//        final String url = "http://www.mocky.io/v2/5bcf2bf33300008200c2486a"; //error list
+//        final String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png";
 
 //        File file = new File("/storage/emulated/0/DCIM/Camera/IMG_20181025_184604.jpg");
 //
@@ -76,41 +75,29 @@ public class MainActivity extends AppCompatActivity {
 //        params.put("b", file);
 
 
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+//        final JSONObject jsonObject = new JSONObject();
+//        try {
+//            jsonObject.put("id", "1");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
 
-        final JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id", "1");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-//        final String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png";
-
-
-        final DMBaseRequestConfig<Configs, RequestError> config = new DMBaseRequestConfig<Configs, RequestError>(getApplicationContext())
+        final DMBaseRequestConfig<User, RequestError> config = new DMBaseRequestConfig<User, RequestError>(getApplicationContext())
                 .setUrl(url)
-                .setFullUrl(url)
+//                .setFullUrl(imageUrl)
 //                .setEnableDownload(true)
-                .setJson(jsonObject)
+//                .setJson(jsonObject)
 //                .setMethod(DMINetworkingConstants.Method.POST)
 //                .setParams(params)
-
-                .setParserConfigs(new DMParserConfigs<>(Configs.class, "data"))
+//                .setRequestTag("tag")
+                .setParserConfigs(new DMParserConfigs<>(User.class, "data"))
                 .setErrorParserConfigs(new DMParserConfigs<>(RequestError.class));
 
 
-//                .setMethod(INetworkingConstants.Method.POST)
-//                .setUrl(url).setParams(new HashMap<>())
-//                .setParserConfigs(new ParserConfigs<>(Configs.class, "data"));
+        final DMLiveDataBag<User, RequestError> request = ExampleNetworking.getInstance().request(config);
 
-
-        final DMLiveDataBag<Configs, RequestError> request = ExampleNetworking.getInstance().request(config);
-
-        request.getSuccessT().observe(this, configsSuccessT -> {
+        request.getSuccessT().observe(this, userSuccessT -> {
 
         });
 
@@ -118,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        request.getSuccessListT().observe(this, configsSuccessListT -> {
+        request.getSuccessListT().observe(this, userSuccessListT -> {
 
         });
 
@@ -146,8 +133,12 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        request.getFileProgress().observe(this, fileProgress -> {
 
-        ExampleNetworking.getInstance().request(config, new DMINetworkListener<Configs, RequestError>() {
+        });
+
+
+        ExampleNetworking.getInstance().request(config, new DMINetworkListener<User, RequestError>() {
 
             @Override
             public void onComplete(final int statusCode, final String status, final JSONObject response) {
@@ -155,12 +146,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onComplete(final int statusCode, final String status, final Configs configs) {
+            public void onComplete(final int statusCode, final String status, final User user) {
 
             }
 
             @Override
-            public void onComplete(final int statusCode, final String status, final List<Configs> configs) {
+            public void onComplete(final int statusCode, final String status, final List<User> userList) {
 
             }
 
@@ -171,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onComplete(final int statusCode, final File file) {
+
+            }
+
+            @Override
+            public void onFileProgress(final FileProgress fileProgress) {
 
             }
 

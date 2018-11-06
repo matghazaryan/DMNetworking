@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.dm.dmnetworking.api_client.base.model.error.ErrorE;
 import com.dm.dmnetworking.api_client.base.model.error.ErrorResponse;
+import com.dm.dmnetworking.api_client.base.model.progress.FileProgress;
 import com.dm.dmnetworking.api_client.base.model.success.SuccessListT;
 import com.dm.dmnetworking.api_client.base.model.success.SuccessResponse;
 import com.dm.dmnetworking.api_client.base.model.success.SuccessT;
@@ -92,6 +93,7 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
         final MutableLiveData<SuccessT<T>> dmtMutableLiveData = new MutableLiveData<>();
         final MutableLiveData<SuccessListT<T>> dmListTMutableLiveData = new MutableLiveData<>();
         final MutableLiveData<File> dmFileMutableLiveData = new MutableLiveData<>();
+        final MutableLiveData<FileProgress> fileProgressMutableLiveData = new MutableLiveData<>();
 
 
         final MutableLiveData<ErrorE<E>> dmErrorEMutableLiveData = new MutableLiveData<>();
@@ -105,6 +107,7 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
         liveDataBag.setSuccessT(dmtMutableLiveData);
         liveDataBag.setSuccessListT(dmListTMutableLiveData);
         liveDataBag.setSuccessFile(dmFileMutableLiveData);
+        liveDataBag.setFileProgress(fileProgressMutableLiveData);
 
 
         liveDataBag.setErrorE(dmErrorEMutableLiveData);
@@ -170,6 +173,11 @@ public abstract class DMBaseRequest extends DMBaseNetworking {
                 @Override
                 public void onComplete(final int statusCode, final File file) {
                     dmFileMutableLiveData.setValue(file);
+                }
+
+                @Override
+                public void onFileProgress(final FileProgress fileProgress) {
+                    fileProgressMutableLiveData.setValue(fileProgress);
                 }
 
                 @Override

@@ -1,8 +1,10 @@
 package com.dm.dmnetworking.api_client.base;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
+import com.dm.dmnetworking.api_client.base.model.progress.FileProgress;
 import com.dm.dmnetworking.api_client.constants.DMINetworkingConstants;
 import com.dm.dmnetworking.api_client.listeners.DMIClientListener;
 import com.loopj.android.http.AsyncHttpClient;
@@ -70,6 +72,12 @@ public abstract class DMBaseAPIClient implements DMINetworkingConstants {
         }
     }
 
+    private static void onProgressHandle(final long bytesWritten, final long totalSize, final DMIClientListener listener) {
+        @SuppressLint("DefaultLocale") final String percentString = String.format("%2.0f%%", (totalSize > 0) ? (bytesWritten * 1.0 / totalSize) * 100 : -1);
+        @SuppressLint("DefaultLocale") final int percent = Integer.parseInt(String.format("%2.0f", (totalSize > 0) ? (bytesWritten * 1.0 / totalSize) * 100 : -1));
+        listener.onFileProgress(new FileProgress(bytesWritten, totalSize, percent, percentString));
+    }
+
     private static void onFailureHandler(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable, final DMIClientListener listener) {
         try {
             listener.onFailure(statusCode, headers, throwable, new JSONObject()
@@ -105,6 +113,12 @@ public abstract class DMBaseAPIClient implements DMINetworkingConstants {
                 public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final File file) {
                     listener.onFailure(statusCode, headers, throwable, null);
                 }
+
+                @Override
+                public void onProgress(final long bytesWritten, final long totalSize) {
+                    super.onProgress(bytesWritten, totalSize);
+                    onProgressHandle(bytesWritten, totalSize, listener);
+                }
             };
         } else {
             handler = new JsonHttpResponseHandler() {
@@ -121,6 +135,12 @@ public abstract class DMBaseAPIClient implements DMINetworkingConstants {
                 @Override
                 public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
                     onFailureHandler(statusCode, headers, responseString, throwable, listener);
+                }
+
+                @Override
+                public void onProgress(final long bytesWritten, final long totalSize) {
+                    super.onProgress(bytesWritten, totalSize);
+                    onProgressHandle(bytesWritten, totalSize, listener);
                 }
             };
         }
