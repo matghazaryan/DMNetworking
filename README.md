@@ -55,13 +55,13 @@ If you don't know about [LiveData](https://developer.android.com/topic/libraries
 
 ### Why use DMNetworking?
 * Build your request by creating your own request **config**
-* Google announced **LiveData** and DMNetworking library gives you fastest way to get parse data converted to LiveData.
+* Google announced **LiveData** and DMNetworking library gives you fastest way to get parsed data converted to LiveData.
 * You can get response as an **Object** as well without LiveData.
 * If you want to do your own parsing you can do it as well using **JSONObject** response.
 * Error handling is easier than you think, all you have to do just create a class and DMNetworking will give your **parsed error Object** as a response.
 * If you want to hande error response by yourself you can do it by using **error JSONObject response**.
 * You can set request parameters as **HashMap** or as **JSONObject**
-* If you have *nested or multi level JSONResponse** you can set your path to parse exactly onto object. You don't need to create a lot of class at all. Create only **one class** for parsing object
+* If you have **nested or multi level JSONResponse** you can set your path to parse exactly onto object. You don't need to create a lot of class at all. Create only **one class** for parsing object
 * **Custom status handling:** Sometimes all response has status code 200 and all logic using custom statuses. DMNetworking gives you a way to handle this as well.
 * If there is **no internet connection** before and during the request DMNetworking can tell you about this. You don't need to write code for checking is there an internet do a request or something else. If you want load your data from database if there is no internet connection you can do it using **no internet connection** listener.
 * You can **upload** and **download** file in a simple way.
