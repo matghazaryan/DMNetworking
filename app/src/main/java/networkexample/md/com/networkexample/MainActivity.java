@@ -10,14 +10,18 @@ import android.support.v7.app.AppCompatActivity;
 import com.dm.dmnetworking.api_client.base.DMBaseRequestConfig;
 import com.dm.dmnetworking.api_client.base.DMLiveDataBag;
 import com.dm.dmnetworking.api_client.base.model.progress.FileProgress;
+import com.dm.dmnetworking.api_client.constants.DMINetworkingConstants;
 import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
 import com.dm.dmnetworking.parser.DMParserConfigs;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import networkexample.md.com.networkexample.model.RequestError;
 import networkexample.md.com.networkexample.model.User;
@@ -74,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
 //        params.put("a", "aaaaa");
 //        params.put("b", file);
 
+        final Map<String,Object> params = new HashMap<>();
+        params.put("id","2");
+        params.put("name","John");
+
 
 //        final JSONObject jsonObject = new JSONObject();
 //        try {
@@ -84,15 +92,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         final DMBaseRequestConfig<User, RequestError> config = new DMBaseRequestConfig<User, RequestError>(getApplicationContext())
-                .setUrl(url)
-//                .setFullUrl(imageUrl)
-//                .setEnableDownload(true)
-//                .setJson(jsonObject)
-//                .setMethod(DMINetworkingConstants.Method.POST)
-//                .setParams(params)
-//                .setRequestTag("tag")
+                .setFullUrl(url)
+                .setMethod(DMINetworkingConstants.Method.POST)
+                .setParams(params)
+                .setRequestTag("tag")
                 .setParserConfigs(new DMParserConfigs<>(User.class, "data"))
                 .setErrorParserConfigs(new DMParserConfigs<>(RequestError.class));
+
+
 
 
         final DMLiveDataBag<User, RequestError> request = ExampleNetworking.getInstance().request(config);
@@ -138,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         ExampleNetworking.getInstance().request(config, new DMINetworkListener<User, RequestError>() {
 
             @Override
@@ -165,10 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            @Override
-            public void onFileProgress(final FileProgress fileProgress) {
-
-            }
 
             @Override
             public void onError(final int statusCode, final String status, final JSONObject response) {
