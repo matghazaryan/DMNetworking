@@ -174,14 +174,14 @@ Support us by clicking star button on the upper right of this page.
 		
 	
 ### Overeide Method description
-Set your request timeout in milliseconds
+**Set your request timeout in milliseconds**
 
 	@Override
     protected int getRequestTimeOut() {
         return 20000;
     }
 
-You can set it your own logic when do request. If you do not have custom cases you can let it default.
+**You can set it your own logic when do request. If you do not have custom cases you can let it default.**
 
 	 @Override
 	    protected boolean isNeedToMakeRequest(final Context context, final DMINetworkListener listener) {
@@ -189,7 +189,7 @@ You can set it your own logic when do request. If you do not have custom cases y
 	    }
 	    
 	
-You can enable/disable logger and set your own tag. You can change your logger string by calling ***setRequestTag("your-tag")*** from configs
+**You can enable/disable logger and set your own tag. You can change your logger string by calling** ***setRequestTag("your-tag")*** from configs
 
 	@Override
 	    public String getTagForLogger() {
@@ -203,7 +203,7 @@ You can enable/disable logger and set your own tag. You can change your logger s
 	    
 	    
 	    
-Handle your status in handleStatuses method: Here you can find custom handling example:
+**Handle your status in handleStatuses method: Here you can find custom handling example:**
 
 	  @Override
 	    protected void handleStatuses(final Context context, final int statusCode, final JSONObject jsonObject, final DMIStatusHandleListener listener) {
@@ -231,7 +231,7 @@ Handle your status in handleStatuses method: Here you can find custom handling e
 	    
 	    
 	    
-Build your own URL: You can set some GET params to send with every request
+**Build your own URL: You can set some GET params to send with every request**
 
 	@Override
     protected String getFullUrl(final String url) {
@@ -241,7 +241,7 @@ Build your own URL: You can set some GET params to send with every request
         return fullUrl;
     }
     
-If you want to use default url building just return the url:
+**If you want to use default url building just return the url:**
 
 		@Override
 	    protected String getFullUrl(final String url) {	
