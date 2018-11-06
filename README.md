@@ -321,7 +321,7 @@ Now we can see more detailed examples in below:
 ***Making a POST request with params***
 
 	final String url = "your-url";
-	 final Map<String, String> params = new HashMap<>();
+	 final Map<String, Object> params = new HashMap<>();
         params.put("id", "1");
         params.put("name", "John Smith");
         
@@ -452,7 +452,7 @@ If you do not want get results in LiveData you can get it on a simple way as sho
 
 Full example of making a request and get responses.
 
-	 final Map<String,String> params = new HashMap<>();
+	 final Map<String,Object> params = new HashMap<>();
 	        params.put("id","2");
 	        params.put("name","John");
 
