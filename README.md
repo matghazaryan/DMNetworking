@@ -80,7 +80,7 @@ Support us by clicking star button on the upper right of this page.
 
 1. Create your networking class it should be extended from ***DMBaseRequest***
 
-			public class ExampleNetworking extends DMBaseRequest {
+		public class ExampleNetworking extends DMBaseRequest {
 		
 		    private static ExampleNetworking ourInstance;
 		
