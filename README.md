@@ -38,6 +38,14 @@ Add the dependency
 	    <version>1.1.1</version>
 	</dependency>
 	
+Don't forget to add permission on AndroidManifest.xml
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    	<uses-permission android:name="android.permission.INTERNET" />
+
+If your working with files you should add also
+
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 ### Introduction
 
 DMNetworking Library takes care of everything. All you have to do just make request and listen response.
