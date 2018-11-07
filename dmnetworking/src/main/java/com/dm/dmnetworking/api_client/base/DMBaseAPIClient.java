@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
+import com.dm.dmnetworking.BuildConfig;
 import com.dm.dmnetworking.api_client.base.model.progress.FileProgress;
 import com.dm.dmnetworking.api_client.constants.DMINetworkingConstants;
 import com.dm.dmnetworking.api_client.listeners.DMIClientListener;

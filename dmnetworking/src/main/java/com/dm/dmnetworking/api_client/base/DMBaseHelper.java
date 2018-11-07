@@ -47,7 +47,8 @@ abstract class DMBaseHelper extends DMBase {
 
     final <T, E> void onFailure(final DMBaseRequestConfig<T, E> config, final int statusCode, final Throwable throwable, final JSONObject errorResponse, final DMINetworkListener<T, E> listener) {
         if (config != null) {
-            if (BuildConfig.DEBUG) {
+
+            if (isEnableLogger()) {
                 Log.wtf(getTagForLogger(), "{ERROR==>>}{" + config.getUrl() + "}==>>" + errorResponse);
             }
 
@@ -70,7 +71,7 @@ abstract class DMBaseHelper extends DMBase {
     }
 
     final void showLogs(final String pUrl, final JSONObject jsonObject, final File file) {
-        if (BuildConfig.DEBUG && isEnableLogger()) {
+        if (isEnableLogger()) {
             try {
                 String logText = "";
                 if (jsonObject != null) {
