@@ -74,6 +74,7 @@ If you don't know about [LiveData](https://developer.android.com/topic/libraries
 * If you have **nested or multi level JSONResponse** you can set your path to parse exactly onto object. You don't need to create a lot of class at all. Create only **one class** for parsing object
 * **Custom status handling:** Sometimes all response has status code 200 and all logic using custom statuses. DMNetworking gives you a way to handle this as well.
 * If there is **no internet connection** before and during the request DMNetworking can tell you about this. You don't need to write code for checking is there an internet do a request or something else. If you want load your data from database if there is no internet connection you can do it using **no internet connection** listener.
+* You can set your logic **before making a request**, for example remove headers before making a request. 
 * You can **upload** and **download** file in a simple way.
 * During the upload and download you can get **realtime updates by percentage.** It can help you to show progress directly.
 * Automatically updating **the token(API token or JWT token)**
@@ -132,6 +133,11 @@ Support us by clicking star button on the upper right of this page.
 		    @Override
 		    protected boolean isNeedToMakeRequest(final Context context, final DMINetworkListener listener) {
 		        return super.isNeedToMakeRequest(context, listener);
+		    }
+		    
+		    @Override
+		    protected void beforeRequest(final Context context, final DMRequestListener listener) {
+			super.beforeRequest(context, listener);
 		    }
 		
 		    @Override
@@ -197,7 +203,12 @@ Support us by clicking star button on the upper right of this page.
 	    protected boolean isNeedToMakeRequest(final Context context, final DMINetworkListener listener) {
 	        return super.isNeedToMakeRequest(context, listener);
 	    }
-	    
+
+**Do something before making a request**
+	@Override
+	    protected void beforeRequest(final Context context, final DMRequestListener listener) {
+		super.beforeRequest(context, listener);
+	    }
 	
 **You can enable/disable logger and set your own tag. You can change your logger string by calling** ***setRequestTag("your-tag")*** from configs
 
