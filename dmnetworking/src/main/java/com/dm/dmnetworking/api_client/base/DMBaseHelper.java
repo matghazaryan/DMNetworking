@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.dm.dmnetworking.BuildConfig;
 import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
 import com.dm.dmnetworking.parser.DMJsonParser;
 import com.dm.dmnetworking.parser.DMParserConfigs;
@@ -160,5 +159,10 @@ abstract class DMBaseHelper extends DMBase {
         }
 
         return isHasInternetConnection;
+    }
+
+    @Override
+    protected void beforeRequest(final Context context, final DMRequestListener listener) {
+        listener.doRequest();
     }
 }

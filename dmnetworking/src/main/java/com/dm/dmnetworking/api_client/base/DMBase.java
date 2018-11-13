@@ -15,5 +15,7 @@ abstract class DMBase implements DMIBaseMethod {
 
     protected abstract String getFullUrl(final String url);
 
+    protected abstract void beforeRequest(final Context context, final DMRequestListener listener);
+
     abstract void requestForToken(final int statusCode, final Context context, final DMBaseTokenHandler baseToken, final DMIBaseOnTokenRefreshListener listener);
 }

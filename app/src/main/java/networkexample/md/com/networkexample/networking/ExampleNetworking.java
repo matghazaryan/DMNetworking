@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.dm.dmnetworking.api_client.base.DMBaseRequest;
 import com.dm.dmnetworking.api_client.base.DMBaseTokenHandler;
+import com.dm.dmnetworking.api_client.base.DMRequestListener;
 import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
 import com.dm.dmnetworking.api_client.listeners.DMIStatusHandleListener;
 
@@ -53,6 +54,11 @@ public class ExampleNetworking extends DMBaseRequest {
     @Override
     protected boolean isNeedToMakeRequest(final Context context, final DMINetworkListener listener) {
         return super.isNeedToMakeRequest(context, listener);
+    }
+
+    @Override
+    protected void beforeRequest(final Context context, final DMRequestListener listener) {
+        super.beforeRequest(context, listener);
     }
 
     @Override
