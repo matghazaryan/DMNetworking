@@ -13,7 +13,7 @@ abstract class DMBase implements DMIBaseMethod {
 
     protected abstract int getRequestTimeOut();
 
-    protected abstract String getFullUrl(final String url);
+    protected abstract String getFullUrl(final Context context, final String url);
 
     protected abstract void beforeRequest(final Context context, final DMRequestListener listener);
 

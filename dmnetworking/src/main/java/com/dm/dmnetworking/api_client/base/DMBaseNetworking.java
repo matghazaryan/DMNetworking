@@ -19,7 +19,7 @@ abstract class DMBaseNetworking extends DMBaseHelper {
 
         beforeRequest(config.getContext(), () -> {
             if (!config.isFullUrl()) {
-                config.setUrl(getFullUrl(config.getUrl()));
+                config.setUrl(getFullUrl(config.getContext(), config.getUrl()));
             }
 
             DMAPIClient.makeRequest(config, new DMIClientListener() {

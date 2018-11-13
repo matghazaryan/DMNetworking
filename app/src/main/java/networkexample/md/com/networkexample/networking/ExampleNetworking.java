@@ -67,7 +67,7 @@ public class ExampleNetworking extends DMBaseRequest {
     }
 
     @Override
-    protected String getFullUrl(final String url) {
+    protected String getFullUrl(final Context context, final String url) {
         return url;
     }
 
