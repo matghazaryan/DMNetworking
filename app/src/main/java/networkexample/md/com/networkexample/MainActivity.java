@@ -9,12 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.dm.dmnetworking.api_client.base.DMBaseRequestConfig;
 import com.dm.dmnetworking.api_client.base.DMLiveDataBag;
-import com.dm.dmnetworking.api_client.base.model.progress.FileProgress;
 import com.dm.dmnetworking.api_client.constants.DMINetworkingConstants;
 import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
 import com.dm.dmnetworking.parser.DMParserConfigs;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -67,8 +65,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
 
-        final String url = "http://www.mocky.io/v2/5be14bc13000006300d9a8a5"; //object
-//        final String url = "http://www.mocky.io/v2/5be14e693000004e00d9a8b3"; //array
+//        final String url = "http://www.mocky.io/v2/5bf3ee4f3100008f00619a63"; //object
+//        final String url = "http://www.mocky.io/v2/5bf3eef43100006400619a6c"; //array
+        final String url = "http://www.mocky.io/v2/5bf3ef643100006800619a6f"; //array deep
 //        final String url = "http://www.mocky.io/v2/5bcf2bf33300008200c2486a"; //error list
 //        final String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png";
 
@@ -78,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
 //        params.put("a", "aaaaa");
 //        params.put("b", file);
 
-        final Map<String,Object> params = new HashMap<>();
-        params.put("id","2");
-        params.put("name","John");
+        final Map<String, Object> params = new HashMap<>();
+        params.put("id", "2");
+        params.put("name", "John");
 
 
 //        final JSONObject jsonObject = new JSONObject();
@@ -96,10 +95,8 @@ public class MainActivity extends AppCompatActivity {
                 .setMethod(DMINetworkingConstants.Method.POST)
                 .setParams(params)
                 .setRequestTag("tag")
-                .setParserConfigs(new DMParserConfigs<>(User.class, "data"))
+                .setParserConfigs(new DMParserConfigs<>(User.class, "data", "list"))
                 .setErrorParserConfigs(new DMParserConfigs<>(RequestError.class));
-
-
 
 
         final DMLiveDataBag<User, RequestError> request = ExampleNetworking.getInstance().request(config);
@@ -143,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         request.getFileProgress().observe(this, fileProgress -> {
 
         });
-
 
 
         ExampleNetworking.getInstance().request(config, new DMINetworkListener<User, RequestError>() {

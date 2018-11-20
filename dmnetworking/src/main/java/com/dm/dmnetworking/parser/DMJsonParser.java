@@ -81,7 +81,7 @@ public class DMJsonParser implements DMINetworkingConstants {
         JSONObject tempJsonOld;
 
         if (jsonKeys.length > 1) {
-            for (int i = 0; i < jsonKeys.length - 1; i++) {
+            for (int i = 0; i < jsonKeys.length; i++) {
                 final String s = jsonKeys[i];
                 tempJsonOld = tempJson;
 
