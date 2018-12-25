@@ -32,7 +32,7 @@ public final class DMNetworkJsonParser implements DMNetworkIConstants {
         return getObjectMapper().readValue(pResponse.toString(), getObjectMapper().getTypeFactory().constructCollectionType(List.class, aClass));
     }
 
-    static <T> T parseObject(final JSONObject response, final Class<T> aClass, final String... jsonKeys) {
+    public static <T> T parseObject(final JSONObject response, final Class<T> aClass, final String... jsonKeys) {
         try {
             JSONObject tempJson = response;
             for (final String s : jsonKeys) {
@@ -52,7 +52,7 @@ public final class DMNetworkJsonParser implements DMNetworkIConstants {
         return null;
     }
 
-    static <T> List<T> parseArray(final JSONObject response, final Class<T> aClass, final String... jsonKeys) {
+    public static <T> List<T> parseArray(final JSONObject response, final Class<T> aClass, final String... jsonKeys) {
         try {
             JSONObject tempJson = response;
             for (int i = 0; i < jsonKeys.length - 1; i++) {
@@ -74,7 +74,7 @@ public final class DMNetworkJsonParser implements DMNetworkIConstants {
         return null;
     }
 
-    static ParseObject getType(final JSONObject response, final String... jsonKeys) {
+    public static ParseObject getType(final JSONObject response, final String... jsonKeys) {
 
         JSONObject tempJson = response;
         JSONObject tempJsonOld;
