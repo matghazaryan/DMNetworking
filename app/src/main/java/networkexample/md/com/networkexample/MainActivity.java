@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 
-import com.dm.dmnetworking.api_client.base.DMBaseRequestConfig;
-import com.dm.dmnetworking.api_client.base.DMLiveDataBag;
-import com.dm.dmnetworking.api_client.constants.DMINetworkingConstants;
-import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
-import com.dm.dmnetworking.parser.DMParserConfigs;
+import com.dm.dmnetworking.DMNetworkBaseRequestConfig;
+import com.dm.dmnetworking.DMNetworkIConstants;
+import com.dm.dmnetworking.DMNetworkIListener;
+import com.dm.dmnetworking.DMNetworkLiveDataBag;
+import com.dm.dmnetworking.DMNetworkParserConfigs;
 
 import org.json.JSONObject;
 
@@ -90,16 +90,16 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
-        final DMBaseRequestConfig<User, RequestError> config = new DMBaseRequestConfig<User, RequestError>(getApplicationContext())
+        final DMNetworkBaseRequestConfig<User, RequestError> config = new DMNetworkBaseRequestConfig<User, RequestError>(getApplicationContext())
                 .setFullUrl(url)
-                .setMethod(DMINetworkingConstants.Method.POST)
+                .setMethod(DMNetworkIConstants.Method.POST)
                 .setParams(params)
                 .setRequestTag("tag")
-                .setParserConfigs(new DMParserConfigs<>(User.class, "data", "list"))
-                .setErrorParserConfigs(new DMParserConfigs<>(RequestError.class));
+                .setParserConfigs(new DMNetworkParserConfigs<>(User.class, "data", "list"))
+                .setErrorParserConfigs(new DMNetworkParserConfigs<>(RequestError.class));
 
 
-        final DMLiveDataBag<User, RequestError> request = ExampleNetworking.getInstance().request(config);
+        final DMNetworkLiveDataBag<User, RequestError> request = ExampleNetworking.getInstance().request(config);
 
         request.getSuccessT().observe(this, userSuccessT -> {
 
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        ExampleNetworking.getInstance().request(config, new DMINetworkListener<User, RequestError>() {
+        ExampleNetworking.getInstance().request(config, new DMNetworkIListener<User, RequestError>() {
 
             @Override
             public void onComplete(final int statusCode, final String status, final JSONObject response) {

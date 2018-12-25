@@ -2,17 +2,17 @@ package networkexample.md.com.networkexample.networking;
 
 import android.content.Context;
 
-import com.dm.dmnetworking.api_client.base.DMBaseRequest;
-import com.dm.dmnetworking.api_client.base.DMBaseTokenHandler;
-import com.dm.dmnetworking.api_client.base.DMRequestListener;
-import com.dm.dmnetworking.api_client.listeners.DMINetworkListener;
-import com.dm.dmnetworking.api_client.listeners.DMIStatusHandleListener;
+import com.dm.dmnetworking.DMNetworkBaseRequest;
+import com.dm.dmnetworking.DMNetworkBaseTokenHandler;
+import com.dm.dmnetworking.DMNetworkIListener;
+import com.dm.dmnetworking.DMNetworkIStatusHandleListener;
+import com.dm.dmnetworking.DMNetworkRequestListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class ExampleNetworking extends DMBaseRequest {
+public class ExampleNetworking extends DMNetworkBaseRequest {
 
     private static ExampleNetworking ourInstance;
 
@@ -28,7 +28,7 @@ public class ExampleNetworking extends DMBaseRequest {
     }
 
     @Override
-    protected void handleStatuses(final Context context, final int statusCode, final JSONObject jsonObject, final DMIStatusHandleListener listener) {
+    protected void handleStatuses(final Context context, final int statusCode, final JSONObject jsonObject, final DMNetworkIStatusHandleListener listener) {
         try {
             String status = "";
             if (jsonObject != null) {
@@ -52,12 +52,12 @@ public class ExampleNetworking extends DMBaseRequest {
     }
 
     @Override
-    protected boolean isNeedToMakeRequest(final Context context, final DMINetworkListener listener) {
+    protected boolean isNeedToMakeRequest(final Context context, final DMNetworkIListener listener) {
         return super.isNeedToMakeRequest(context, listener);
     }
 
     @Override
-    protected void beforeRequest(final Context context, final DMRequestListener listener) {
+    protected void beforeRequest(final Context context, final DMNetworkRequestListener listener) {
         super.beforeRequest(context, listener);
     }
 
@@ -82,8 +82,8 @@ public class ExampleNetworking extends DMBaseRequest {
     }
 
     @Override
-    public DMBaseTokenHandler onTokenRefresh() {
-        return new DMBaseTokenHandler("refreshUrl") {
+    public DMNetworkBaseTokenHandler onTokenRefresh() {
+        return new DMNetworkBaseTokenHandler("refreshUrl") {
 
             @Override
             protected void onTokenRefreshed(final Context context, final JSONObject jsonObject) {
