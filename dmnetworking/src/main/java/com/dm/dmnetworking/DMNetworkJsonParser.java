@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-final class DMNetworkJsonParser implements DMNetworkIConstants {
+public final class DMNetworkJsonParser implements DMNetworkIConstants {
 
     private static ObjectMapper objectMapper;
 
