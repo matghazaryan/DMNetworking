@@ -80,6 +80,7 @@ If you don't know about [LiveData](https://developer.android.com/topic/libraries
 * Automatically updating **the token(API token or JWT token)**
 * If all your requests shoud send **same params** you can set it up as well. For example *deviceType=android* or *deviceType=ios* 
 * Easily set ***headers*** and remove ***headers***
+* Set ***fake JSON*** and test it before real JSON will be available from server side (Add json on assets folder) 
 * Cancell request by tag
 * Cancell all request
 
@@ -529,3 +530,31 @@ Full example of making a request and get responses.
 
             }
         });
+
+###Fake json usage
+
+To enable testing with fake json you have to do following steps
+Override **getFakeJsonFilePath** method and give your url load JSON from assets if server-side JSON not available
+If your internet not available you can simple change **isNeedToMakeRequest** to return **true** and DMNetworking will get JSON from assets if it exist on assets folder
+
+		@Override
+		    public String getFakeJsonFilePath(final String url) {
+			switch (url) {
+		            case "get_profile":
+		                return "get_profile.json";
+		            case "get_product":
+		                return "get_product.json";
+		            case "get_user":
+		                return "user/get_user.json";
+			    default:
+				return null;
+			}
+		    }
+		    
+###Easy debugging
+Ovverride this method and see **requesting url, response, response type** 
+
+		@Override
+		    public void onSuccessOrFailureResponseForDebug(final String url, final JSONObject jsonObject, final ResponseType responseType) {
+
+		    }
