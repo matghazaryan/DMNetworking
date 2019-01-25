@@ -59,6 +59,7 @@ You can listen response in different ways:
 * Error JSON response
 * Error Object response
 * Error LiveData response
+* Fake json response if server-side not available
 * No internet connection handling
 
 If you don't know about [LiveData](https://developer.android.com/topic/libraries/architecture/livedata) I suggest to read about this.
