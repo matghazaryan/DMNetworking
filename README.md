@@ -531,7 +531,7 @@ Full example of making a request and get responses.
             }
         });
 
-###Fake json usage
+### Fake json usage
 
 To enable testing with fake json you have to do following steps
 Override **getFakeJsonFilePath** method and give your url load JSON from assets if server-side JSON not available
@@ -545,16 +545,16 @@ If your internet not available you can simple change **isNeedToMakeRequest** to 
 		            case "get_product":
 		                return "get_product.json";
 		            case "get_user":
-		                return "user/get_user.json";
+		                return "user/get_user.json"; // when assets file is on user's folder
 			    default:
 				return null;
 			}
 		    }
 		    
-###Easy debugging
+### Easy debugging
 Ovverride this method and see **requesting url, response, response type** 
 
 		@Override
-		    public void onSuccessOrFailureResponseForDebug(final String url, final JSONObject jsonObject, final ResponseType responseType) {
+		    public void onSuccessOrFailureResponseForDebug(final String url, final JSONObject jsonObject, final 									ResponseType responseType) {
 
 		    }
