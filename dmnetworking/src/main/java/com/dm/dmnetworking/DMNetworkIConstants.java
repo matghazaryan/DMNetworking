@@ -9,6 +9,7 @@ public interface DMNetworkIConstants {
 
     String TAG = "API";
     boolean IS_ENABLE_LOGGER = true;
+    boolean IS_ENABLE_FAKE_JSON = false;
     String URL = "URL:";
     String STATUS_CODE = "statusCode";
     String ERROR = "error";

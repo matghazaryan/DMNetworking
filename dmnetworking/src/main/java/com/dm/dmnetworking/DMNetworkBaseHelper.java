@@ -173,7 +173,7 @@ abstract class DMNetworkBaseHelper extends DMNetworkBase {
     }
 
     void tryToLoadJSONFromAsset(final Context context, final String filePath, final DMNetworkingIOnReadFileListener listener) {
-        if (filePath != null) {
+        if (isEnableFakeJson() && filePath != null) {
             Executors.newSingleThreadExecutor().execute(() -> {
 
                 JSONObject jsonObject = null;

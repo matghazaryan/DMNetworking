@@ -23,7 +23,7 @@ abstract class DMNetworkBaseNetworking extends DMNetworkBaseHelper {
 
             tryToLoadJSONFromAsset(config.getContext(), getFakeJsonFilePath(url), fakeJsonObject -> {
 
-                if (fakeJsonObject != null && BuildConfig.DEBUG) {
+                if (isEnableFakeJson() && fakeJsonObject != null) {
                     handleResponse(config, url, FAKE_FILE, FAKE_STATUS_CODE, fakeJsonObject, JsonType.FAKE_JSON, listener);
                     return;
                 }

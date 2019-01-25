@@ -13,6 +13,10 @@ interface DMNetworkIBaseMethod extends DMNetworkIConstants {
         return IS_ENABLE_LOGGER;
     }
 
+    default boolean isEnableFakeJson() {
+        return IS_ENABLE_FAKE_JSON;
+    }
+
     default DMNetworkBaseTokenHandler onTokenRefresh() {
         return null;
     }

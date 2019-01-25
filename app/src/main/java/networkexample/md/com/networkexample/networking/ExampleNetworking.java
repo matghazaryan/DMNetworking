@@ -111,6 +111,11 @@ public class ExampleNetworking extends DMNetworkBaseRequest {
 
     }
 
+    @Override
+    public boolean isEnableFakeJson() {
+        return true;
+    }
+
     /**
      * For use fake json in offline mode return true for function isNeedToMakeRequest
      */
