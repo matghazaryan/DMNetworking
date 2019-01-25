@@ -4,16 +4,23 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 
 abstract class DMNetworkBaseHelper extends DMNetworkBase {
@@ -65,8 +72,11 @@ abstract class DMNetworkBaseHelper extends DMNetworkBase {
         }
     }
 
-    final void showLogs(final String pUrl, final JSONObject jsonObject, final File file) {
+    final void showLogs(final String pUrl, final JSONObject jsonObject, final File file, final JsonType jsonType) {
         if (isEnableLogger()) {
+
+            final String fakeInfo = (jsonType == JsonType.FAKE_JSON) ? "={FAKE JSON}=" : "";
+
             try {
                 String logText = "";
                 if (jsonObject != null) {
@@ -75,7 +85,7 @@ abstract class DMNetworkBaseHelper extends DMNetworkBase {
                 } else if (file != null) {
                     logText = file.getName();
                 }
-                Log.wtf(getTagForLogger(), "{OK}==>>{" + pUrl + "}==>>" + logText);
+                Log.wtf(getTagForLogger(), "{OK}=" + fakeInfo + "=>>{" + pUrl + "}==>>" + logText);
             } catch (final Exception e) {
                 e.printStackTrace();
             }
@@ -146,7 +156,7 @@ abstract class DMNetworkBaseHelper extends DMNetworkBase {
         DMNetworkBaseAPIClient.getClient(context).cancelRequestsByTAG(requestTag, mayInterruptIfRunning);
     }
 
-    protected boolean isNeedToMakeRequest(final Context context, final DMNetworkIListener listener) {
+    protected boolean isNeedToMakeRequest(final Context context, final String url, final DMNetworkIListener listener) {
         boolean isHasInternetConnection = true;
 
         if (!isConnectedToInternet(context)) {
@@ -158,7 +168,42 @@ abstract class DMNetworkBaseHelper extends DMNetworkBase {
     }
 
     @Override
-    protected void beforeRequest(final Context context, final DMNetworkRequestListener listener) {
+    protected void beforeRequest(final Context context, final String url, final DMNetworkRequestListener listener) {
         listener.doRequest();
+    }
+
+    void tryToLoadJSONFromAsset(final Context context, final String filePath, final DMNetworkingIOnReadFileListener listener) {
+        if (filePath != null) {
+            Executors.newSingleThreadExecutor().execute(() -> {
+
+                JSONObject jsonObject = null;
+
+                String json = null;
+                try {
+                    final InputStream is = context.getAssets().open(filePath);
+                    final int size = is.available();
+                    final byte[] buffer = new byte[size];
+                    is.read(buffer);
+                    is.close();
+                    json = new String(buffer, StandardCharsets.UTF_8);
+                } catch (final IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                if (json != null) {
+                    try {
+                        jsonObject = new JSONObject(json);
+                    } catch (final JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+                final JSONObject finalJsonObject = jsonObject;
+                new Handler(Looper.getMainLooper()).post(() -> listener.onRead(finalJsonObject));
+            });
+        } else {
+            listener.onRead(null);
+        }
     }
 }

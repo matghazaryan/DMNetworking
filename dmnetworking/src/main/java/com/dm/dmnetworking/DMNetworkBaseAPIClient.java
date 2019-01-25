@@ -109,7 +109,7 @@ abstract class DMNetworkBaseAPIClient implements DMNetworkIConstants {
 
                 @Override
                 public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final File file) {
-                    listener.onFailure(statusCode, headers, throwable, null);
+                    onFailureHandler(statusCode, headers, null, throwable, listener);
                 }
 
                 @Override

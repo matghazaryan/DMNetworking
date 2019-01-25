@@ -1,5 +1,7 @@
 package com.dm.dmnetworking;
 
+import java.io.File;
+
 public interface DMNetworkIConstants {
 
     String APPLICATION_JSON = "application/json";
@@ -12,6 +14,8 @@ public interface DMNetworkIConstants {
     String ERROR = "error";
     String RESPONSE_STRING = "responseString";
     String NO_INTERNET_CONNECTION = "no_internet_connection";
+    int FAKE_STATUS_CODE = -1000;
+    File FAKE_FILE = null;
 
     enum Method {
         POST, GET, PUT, DELETE
@@ -19,5 +23,13 @@ public interface DMNetworkIConstants {
 
     enum ParseObject {
         JSON_OBJECT, JSON_ARRAY, OTHER
+    }
+
+    enum JsonType {
+        REAL_JSON, FAKE_JSON
+    }
+
+    enum ResponseType {
+        SUCCESS, FAILURE
     }
 }

@@ -51,14 +51,17 @@ public class ExampleNetworking extends DMNetworkBaseRequest {
         }
     }
 
+    /**
+     * For use fake json in offline mode return true
+     */
     @Override
-    protected boolean isNeedToMakeRequest(final Context context, final DMNetworkIListener listener) {
-        return super.isNeedToMakeRequest(context, listener);
+    protected boolean isNeedToMakeRequest(final Context context, final String url, final DMNetworkIListener listener) {
+        return super.isNeedToMakeRequest(context, url, listener);
     }
 
     @Override
-    protected void beforeRequest(final Context context, final DMNetworkRequestListener listener) {
-        super.beforeRequest(context, listener);
+    protected void beforeRequest(final Context context, final String url, final DMNetworkRequestListener listener) {
+        super.beforeRequest(context, url, listener);
     }
 
     @Override
@@ -68,7 +71,8 @@ public class ExampleNetworking extends DMNetworkBaseRequest {
 
     @Override
     protected String getFullUrl(final Context context, final String url) {
-        return url;
+        return "http://www.mocky.io/v2/" + url;
+//        return url;
     }
 
     @Override
@@ -100,5 +104,27 @@ public class ExampleNetworking extends DMNetworkBaseRequest {
 
             }
         };
+    }
+
+    @Override
+    public void onSuccessOrFailureResponseForDebug(final String url, final JSONObject jsonObject, final ResponseType responseType) {
+
+    }
+
+    /**
+     * For use fake json in offline mode return true for function isNeedToMakeRequest
+     */
+    @Override
+    public String getFakeJsonFilePath(final String url) {
+        switch (url) {
+//            case "5bf3ef643100006800619a6f":
+//                return "json_example.json";
+//            case "5bf3ef643100006800619a6f":
+//                return "json_example_big.json";
+//            case "5bf3ef643100006800619a6f":
+//                return "user/json_example_second.json";
+            default:
+                return null;
+        }
     }
 }

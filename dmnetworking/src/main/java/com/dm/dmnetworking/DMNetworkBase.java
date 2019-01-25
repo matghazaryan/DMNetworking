@@ -13,7 +13,7 @@ abstract class DMNetworkBase implements DMNetworkIBaseMethod {
 
     protected abstract String getFullUrl(final Context context, final String url);
 
-    protected abstract void beforeRequest(final Context context, final DMNetworkRequestListener listener);
+    protected abstract void beforeRequest(final Context context, final String url, final DMNetworkRequestListener listener);
 
     abstract void requestForToken(final int statusCode, final Context context, final DMNetworkBaseTokenHandler baseToken, final DMNetworkIBaseOnTokenRefreshListener listener);
 }

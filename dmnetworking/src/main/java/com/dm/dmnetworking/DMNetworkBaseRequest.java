@@ -47,7 +47,7 @@ public abstract class DMNetworkBaseRequest extends DMNetworkBaseNetworking {
         }
 
 
-        if (isRequestDataSuccess && isNeedToMakeRequest(config.getContext(), listener)) {
+        if (isRequestDataSuccess && isNeedToMakeRequest(config.getContext(), config.getUrl(), listener)) {
             DMNetworkBaseAPIClient.setRequestTimeOut(getRequestTimeOut());
             DMNetworkBaseAPIClient.setTag(getTagForLogger());
             DMNetworkBaseAPIClient.setEnableLogger(isEnableLogger());
@@ -138,7 +138,7 @@ public abstract class DMNetworkBaseRequest extends DMNetworkBaseNetworking {
         }
 
 
-        if (isRequestDataSuccess && isNeedToMakeRequest(config.getContext(), new DMNetworkIListener() {
+        if (isRequestDataSuccess && isNeedToMakeRequest(config.getContext(), config.getUrl(), new DMNetworkIListener() {
             @Override
             public void onNoInternetConnection() {
                 noInternetConnection.setValue(NO_INTERNET_CONNECTION);
