@@ -16,7 +16,7 @@ Add it in your root build.gradle at the end of repositories:
 Add the dependency
 
 		dependencies {
-		   implementation 'com.github.pmbfish40:DMNetworking:1.1.9'
+		   implementation 'com.github.pmbfish40:DMNetworking:1.2.0'
 		}
 	
 If you're using Maven:
@@ -35,7 +35,7 @@ Add the dependency
 	<dependency>
 	    <groupId>com.github.pmbfish40</groupId>
 	    <artifactId>DMNetworking</artifactId>
-	    <version>1.1.9</version>
+	    <version>1.2.0</version>
 	</dependency>
 	
 Don't forget to add permission on AndroidManifest.xml
@@ -552,7 +552,15 @@ If your internet not available you can simple change **isNeedToMakeRequest** to 
 		    }
 		    
 ### Easy debugging
-Ovverride this method and see **requesting url, response, response type** 
+
+Enable fake json by calling
+
+		@Override
+		   public boolean isEnableFakeJson() {
+		       return true;
+		   }
+
+Than Ovverride this method and see **requesting url, response, response type** 
 
 		@Override
 		    public void onSuccessOrFailureResponseForDebug(final String url, final JSONObject jsonObject, final ResponseType responseType) {
