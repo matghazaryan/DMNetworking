@@ -555,6 +555,6 @@ If your internet not available you can simple change **isNeedToMakeRequest** to 
 Ovverride this method and see **requesting url, response, response type** 
 
 		@Override
-		    public void onSuccessOrFailureResponseForDebug(final String url, final JSONObject jsonObject, final 									ResponseType responseType) {
+		    public void onSuccessOrFailureResponseForDebug(final String url, final JSONObject jsonObject, final ResponseType responseType) {
 
 		    }
