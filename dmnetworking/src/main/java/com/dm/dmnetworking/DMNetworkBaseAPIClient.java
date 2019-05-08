@@ -37,10 +37,11 @@ abstract class DMNetworkBaseAPIClient implements DMNetworkIConstants {
             client = new AsyncHttpClient();
             client.setEnableRedirects(true);
             client.setCookieStore(new PersistentCookieStore(context));
-            client.setTimeout(requestTimeOut);
-            client.setConnectTimeout(requestTimeOut);
-            client.setResponseTimeout(requestTimeOut);
         }
+
+        client.setTimeout(requestTimeOut);
+        client.setConnectTimeout(requestTimeOut);
+        client.setResponseTimeout(requestTimeOut);
 
         return client;
     }
