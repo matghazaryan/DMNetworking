@@ -33,6 +33,7 @@ abstract class DMNetworkBaseAPIClient implements DMNetworkIConstants {
     private static boolean isEnableLogger;
 
     static AsyncHttpClient getClient(final Context context) {
+
         if (client == null) {
             client = new AsyncHttpClient();
             client.setEnableRedirects(true);
