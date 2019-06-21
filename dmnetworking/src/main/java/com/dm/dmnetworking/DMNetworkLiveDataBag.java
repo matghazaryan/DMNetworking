@@ -6,6 +6,7 @@ import com.dm.dmnetworking.model.error.ErrorE;
 import com.dm.dmnetworking.model.error.ErrorResponse;
 import com.dm.dmnetworking.model.progress.FileProgress;
 import com.dm.dmnetworking.model.success.SuccessListT;
+import com.dm.dmnetworking.model.success.SuccessMapT;
 import com.dm.dmnetworking.model.success.SuccessResponse;
 import com.dm.dmnetworking.model.success.SuccessT;
 
@@ -19,6 +20,7 @@ public final class DMNetworkLiveDataBag<T, E> {
     private LiveData<JSONObject> successJsonResponse;
     private LiveData<SuccessResponse> successResponse;
     private LiveData<SuccessT<T>> successT;
+    private LiveData<SuccessMapT<T>> successMapT;
     private LiveData<SuccessListT<T>> successListT;
     private LiveData<File> successFile;
     private LiveData<FileProgress> fileProgress;
@@ -43,6 +45,10 @@ public final class DMNetworkLiveDataBag<T, E> {
 
     void setSuccessT(final LiveData<SuccessT<T>> successT) {
         this.successT = successT;
+    }
+
+    void setSuccessMapT(final LiveData<SuccessMapT<T>> successMapT) {
+        this.successMapT = successMapT;
     }
 
     void setSuccessListT(final LiveData<SuccessListT<T>> successListT) {
@@ -83,6 +89,10 @@ public final class DMNetworkLiveDataBag<T, E> {
 
     public LiveData<SuccessT<T>> getSuccessT() {
         return successT;
+    }
+
+    public LiveData<SuccessMapT<T>> getSuccessMapT() {
+        return successMapT;
     }
 
     public LiveData<SuccessListT<T>> getSuccessListT() {

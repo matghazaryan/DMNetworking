@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public interface DMNetworkIListener<T, E> extends DMNetworkIErrorListener<E> {
 
@@ -18,6 +19,10 @@ public interface DMNetworkIListener<T, E> extends DMNetworkIErrorListener<E> {
     }
 
     default void onComplete(final int statusCode, final String status, final T t) {
+
+    }
+
+    default void onComplete(final int statusCode, final String status, final Map<String, T> tMap) {
 
     }
 

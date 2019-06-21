@@ -10,6 +10,10 @@ public final class DMNetworkParserConfigs<T> {
         this.jsonKeyList = jsonKeyList;
     }
 
+    public DMNetworkParserConfigs(final String... jsonKeyList) {
+        this.jsonKeyList = jsonKeyList;
+    }
+
     Class<T> getAClass() {
         return aClass;
     }

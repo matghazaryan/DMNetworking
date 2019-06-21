@@ -1,6 +1,7 @@
 package com.dm.dmnetworking;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -10,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 public final class DMNetworkJsonParser implements DMNetworkIConstants {
@@ -30,6 +32,12 @@ public final class DMNetworkJsonParser implements DMNetworkIConstants {
 
     private static <T> List<T> parseJsonArray(final JSONArray pResponse, final Class<?> aClass) throws IOException {
         return getObjectMapper().readValue(pResponse.toString(), getObjectMapper().getTypeFactory().constructCollectionType(List.class, aClass));
+    }
+
+    public static <T> Map<String, T> parseJsonMap(final JSONObject response) throws IOException {
+        return getObjectMapper().readValue(response.toString(),
+                new TypeReference<Map<String, T>>() {
+                });
     }
 
     public static <T> T parseObject(final JSONObject response, final Class<T> aClass, final String... jsonKeys) {
@@ -73,6 +81,22 @@ public final class DMNetworkJsonParser implements DMNetworkIConstants {
         }
         return null;
     }
+
+    public static <T> Map<String, T> parseMap(final JSONObject response,
+                                              final String... jsonKeys) {
+        JSONObject tempJson = response;
+        for (int i = 0; i < jsonKeys.length; i++) {
+            final String s = jsonKeys[i];
+            tempJson = tempJson.optJSONObject(s);
+        }
+        try {
+            return parseJsonMap(tempJson);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public static ParseObject getType(final JSONObject response, final String... jsonKeys) {
 
