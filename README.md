@@ -16,7 +16,7 @@ Add it in your root build.gradle at the end of repositories:
 Add the dependency
 
 		dependencies {
-		   implementation 'com.github.pmbfish40:DMNetworking:1.2.1'
+		   implementation 'com.github.pmbfish40:DMNetworking:1.2.2'
 		}
 	
 If you're using Maven:
