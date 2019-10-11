@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     implementation 'com.loopj.android:android-async-http:1.4.9'
     //For live data
     implementation 'android.arch.lifecycle:extensions:1.1.1'
