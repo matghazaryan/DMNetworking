@@ -19,6 +19,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
@@ -93,22 +94,31 @@ abstract class DMNetworkBaseHelper extends DMNetworkBase {
     }
 
     final <T, E> void onParseComplete(final int statusCode, final String status, final JSONObject jsonObject, final DMNetworkParserConfigs<T> parserConfigs, final DMNetworkIListener<T, E> listener) {
-        if (parserConfigs != null && parserConfigs.getAClass() != null && parserConfigs.getJsonKeyList() != null) {
-            switch (DMNetworkJsonParser.getType(jsonObject, parserConfigs.getJsonKeyList())) {
-                case JSON_OBJECT:
-                    listener.onComplete(statusCode, status, DMNetworkJsonParser.parseObject(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
-                    listener.onComplete(statusCode, status, new ArrayList<>());
-                    break;
-                case JSON_ARRAY:
-                    listener.onComplete(statusCode, status, DMNetworkJsonParser.parseArray(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
-                    try {
-                        listener.onComplete(statusCode, status, parserConfigs.getAClass().newInstance());
-                    } catch (IllegalAccessException | InstantiationException e) {
-                        e.printStackTrace();
-                    }
-                    break;
+        if (parserConfigs != null) {
+            if (parserConfigs.getAClass() != null) {
+                switch (DMNetworkJsonParser.getType(jsonObject, parserConfigs.getJsonKeyList())) {
+                    case JSON_OBJECT:
+                        listener.onComplete(statusCode, status, DMNetworkJsonParser.parseObject(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
+                        listener.onComplete(statusCode, status, new ArrayList<>());
+                        listener.onComplete(statusCode, status, new HashMap<>());
+                        break;
+                    case JSON_ARRAY:
+                        listener.onComplete(statusCode, status, new HashMap<>());
+                        listener.onComplete(statusCode, status, DMNetworkJsonParser.parseArray(jsonObject, parserConfigs.getAClass(), parserConfigs.getJsonKeyList()));
+                        try {
+                            listener.onComplete(statusCode, status, parserConfigs.getAClass().newInstance());
+                        } catch (IllegalAccessException | InstantiationException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+            } else {
+                listener.onComplete(statusCode, status, (T) null);
+                listener.onComplete(statusCode, status, new ArrayList<>());
+                listener.onComplete(statusCode, status, DMNetworkJsonParser.parseMap(jsonObject, parserConfigs.getJsonKeyList()));
             }
         }
+        listener.onComplete(statusCode, status, new HashMap<>());
         listener.onComplete(statusCode, status, jsonObject);
         listener.onComplete(statusCode, jsonObject);
     }

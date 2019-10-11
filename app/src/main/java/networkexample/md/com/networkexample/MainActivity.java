@@ -9,11 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.dm.dmnetworking.DMNetworkBaseRequestConfig;
 import com.dm.dmnetworking.DMNetworkIConstants;
+import com.dm.dmnetworking.DMNetworkIListener;
 import com.dm.dmnetworking.DMNetworkLiveDataBag;
 import com.dm.dmnetworking.DMNetworkParserConfigs;
 
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import networkexample.md.com.networkexample.model.RequestError;
@@ -88,17 +93,23 @@ public class MainActivity extends AppCompatActivity {
 
         final DMNetworkBaseRequestConfig<User, RequestError> config = new DMNetworkBaseRequestConfig<User, RequestError>(getApplicationContext())
 //                .setFullUrl(fullUrl)
+//                .setFullUrl("http://www.mocky.io/v2/5d0ca9853500005200b899de")
                 .setUrl(url)
                 .setMethod(DMNetworkIConstants.Method.POST)
                 .setParams(params)
                 .setRequestTag("tag")
                 .setParserConfigs(new DMNetworkParserConfigs<>(User.class, "data", "list"))
+//                .setParserConfigs(new DMNetworkParserConfigs<>())
                 .setErrorParserConfigs(new DMNetworkParserConfigs<>(RequestError.class));
 
 
         final DMNetworkLiveDataBag<User, RequestError> request = ExampleNetworking.getInstance().request(config);
 
         request.getSuccessT().observe(this, userSuccessT -> {
+
+        });
+
+        request.getSuccessMapT().observe(this, userSuccessMapT -> {
 
         });
 
@@ -139,53 +150,58 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-//        ExampleNetworking.getInstance().request(config, new DMNetworkIListener<User, RequestError>() {
-//
-//            @Override
-//            public void onComplete(final int statusCode, final String status, final JSONObject response) {
-//
-//            }
-//
-//            @Override
-//            public void onComplete(final int statusCode, final String status, final User user) {
-//
-//            }
-//
-//            @Override
-//            public void onComplete(final int statusCode, final String status, final List<User> userList) {
-//
-//            }
-//
-//            @Override
-//            public void onComplete(final int statusCode, final JSONObject response) {
-//
-//            }
-//
-//            @Override
-//            public void onComplete(final int statusCode, final File file) {
-//
-//            }
-//
-//
-//            @Override
-//            public void onError(final int statusCode, final String status, final JSONObject response) {
-//
-//            }
-//
-//            @Override
-//            public void onError(final int statusCode, final String status, final RequestError error) {
-//
-//            }
-//
-//            @Override
-//            public void onError(final int statusCode, final JSONObject response) {
-//
-//            }
-//
-//            @Override
-//            public void onNoInternetConnection() {
-//
-//            }
-//        });
+        ExampleNetworking.getInstance().request(config, new DMNetworkIListener<User, RequestError>() {
+
+            @Override
+            public void onComplete(final int statusCode, final String status, final JSONObject response) {
+
+            }
+
+            @Override
+            public void onComplete(final int statusCode, final String status, final User user) {
+
+            }
+
+            @Override
+            public void onComplete(final int statusCode, final String status, final List<User> userList) {
+
+            }
+
+            @Override
+            public void onComplete(final int statusCode, final String status, final Map<String, User> stringUserMap) {
+
+            }
+
+            @Override
+            public void onComplete(final int statusCode, final JSONObject response) {
+
+            }
+
+            @Override
+            public void onComplete(final int statusCode, final File file) {
+
+            }
+
+
+            @Override
+            public void onError(final int statusCode, final String status, final JSONObject response) {
+
+            }
+
+            @Override
+            public void onError(final int statusCode, final String status, final RequestError error) {
+
+            }
+
+            @Override
+            public void onError(final int statusCode, final JSONObject response) {
+
+            }
+
+            @Override
+            public void onNoInternetConnection() {
+
+            }
+        });
     }
 }

@@ -7,6 +7,7 @@ import com.dm.dmnetworking.model.error.ErrorE;
 import com.dm.dmnetworking.model.error.ErrorResponse;
 import com.dm.dmnetworking.model.progress.FileProgress;
 import com.dm.dmnetworking.model.success.SuccessListT;
+import com.dm.dmnetworking.model.success.SuccessMapT;
 import com.dm.dmnetworking.model.success.SuccessResponse;
 import com.dm.dmnetworking.model.success.SuccessT;
 
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public abstract class DMNetworkBaseRequest extends DMNetworkBaseNetworking {
@@ -90,6 +92,7 @@ public abstract class DMNetworkBaseRequest extends DMNetworkBaseNetworking {
         final MutableLiveData<JSONObject> responseMutableLiveData = new MutableLiveData<>();
         final MutableLiveData<SuccessResponse> dmResponseMutableLiveData = new MutableLiveData<>();
         final MutableLiveData<SuccessT<T>> dmtMutableLiveData = new MutableLiveData<>();
+        final MutableLiveData<SuccessMapT<T>> dmMapTMutableLiveData = new MutableLiveData<>();
         final MutableLiveData<SuccessListT<T>> dmListTMutableLiveData = new MutableLiveData<>();
         final MutableLiveData<File> dmFileMutableLiveData = new MutableLiveData<>();
         final MutableLiveData<FileProgress> fileProgressMutableLiveData = new MutableLiveData<>();
@@ -104,6 +107,7 @@ public abstract class DMNetworkBaseRequest extends DMNetworkBaseNetworking {
         liveDataBag.setSuccessJsonResponse(responseMutableLiveData);
         liveDataBag.setSuccessResponse(dmResponseMutableLiveData);
         liveDataBag.setSuccessT(dmtMutableLiveData);
+        liveDataBag.setSuccessMapT(dmMapTMutableLiveData);
         liveDataBag.setSuccessListT(dmListTMutableLiveData);
         liveDataBag.setSuccessFile(dmFileMutableLiveData);
         liveDataBag.setFileProgress(fileProgressMutableLiveData);
@@ -162,6 +166,11 @@ public abstract class DMNetworkBaseRequest extends DMNetworkBaseNetworking {
                 @Override
                 public void onComplete(final int statusCode, final String status, final T t) {
                     dmtMutableLiveData.setValue(new SuccessT<>(statusCode, status, t));
+                }
+
+                @Override
+                public void onComplete(final int statusCode,final String status,final Map<String, T> tMap) {
+                    dmMapTMutableLiveData.setValue(new SuccessMapT<>(statusCode, status, tMap));
                 }
 
                 @Override

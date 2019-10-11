@@ -16,7 +16,7 @@ Add it in your root build.gradle at the end of repositories:
 Add the dependency
 
 		dependencies {
-		   implementation 'com.github.pmbfish40:DMNetworking:1.2.0'
+		   implementation 'com.github.pmbfish40:DMNetworking:1.2.3'
 		}
 	
 If you're using Maven:
@@ -35,7 +35,7 @@ Add the dependency
 	<dependency>
 	    <groupId>com.github.pmbfish40</groupId>
 	    <artifactId>DMNetworking</artifactId>
-	    <version>1.2.0</version>
+	    <version>1.2.3</version>
 	</dependency>
 	
 Don't forget to add permission on AndroidManifest.xml
