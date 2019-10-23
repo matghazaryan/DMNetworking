@@ -8,10 +8,6 @@ public interface DMNetworkIStatusHandleListener {
 
     default void onTokenUpdate() {}
 
-    default void onForceUpdate(){}
-
-    default void onMaintenenceMode(){}
-
     default void onError(String status, JSONObject jsonObject) {
 
     }

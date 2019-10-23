@@ -55,6 +55,11 @@ abstract class DMNetworkBaseHelper extends DMNetworkBase {
                 Log.wtf(getTagForLogger(), "{ERROR==>>}{" + config.getUrl() + "}==>>" + errorResponse);
             }
 
+            if (throwable != null && throwable.getMessage() != null && throwable.getMessage().toLowerCase().contains("UnknownHostException".toLowerCase())) {
+                listener.onNoInternetConnection();
+                return;
+            }
+
             final String status;
             if (throwable instanceof UnknownHostException || throwable instanceof SocketException || throwable instanceof SocketTimeoutException) {
                 listener.onNoInternetConnection();
