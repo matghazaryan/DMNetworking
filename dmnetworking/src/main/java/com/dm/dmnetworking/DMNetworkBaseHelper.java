@@ -60,6 +60,11 @@ abstract class DMNetworkBaseHelper extends DMNetworkBase {
                 return;
             }
 
+            if (throwable != null && throwable.getMessage() != null && throwable.getMessage().toLowerCase().contains("ConnectException".toLowerCase())) {
+                listener.onNoInternetConnection();
+                return;
+            }
+
             final String status;
             if (throwable instanceof UnknownHostException || throwable instanceof SocketException || throwable instanceof SocketTimeoutException) {
                 listener.onNoInternetConnection();
