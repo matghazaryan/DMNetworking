@@ -27,9 +27,9 @@ public final class DMNetworkBaseRequestConfig<T, E> {
 
     private String requestTag;
 
-    private boolean isEnableDownload;
-
     private boolean isFullUrl;
+
+    private DMNetworkIConstants.HttpHandlerType httpHandlerType;
 
     public DMNetworkBaseRequestConfig(final Context context) {
         this.context = context;
@@ -72,8 +72,8 @@ public final class DMNetworkBaseRequestConfig<T, E> {
         return this;
     }
 
-    public DMNetworkBaseRequestConfig<T, E> setEnableDownload(final boolean enableDownload) {
-        isEnableDownload = enableDownload;
+    public DMNetworkBaseRequestConfig<T, E> setHttpHandlerType(final DMNetworkIConstants.HttpHandlerType httpHandlerType) {
+        this.httpHandlerType = httpHandlerType;
         return this;
     }
 
@@ -117,8 +117,8 @@ public final class DMNetworkBaseRequestConfig<T, E> {
         return requestTag;
     }
 
-    public boolean isEnableDownload() {
-        return isEnableDownload;
+    public DMNetworkIConstants.HttpHandlerType getHttpHandlerType() {
+        return httpHandlerType;
     }
 
     public boolean isJSONRequest() {

@@ -33,4 +33,8 @@ public interface DMNetworkIConstants {
     enum ResponseType {
         SUCCESS, FAILURE
     }
+
+    enum HttpHandlerType {
+        JSON, BINARY, DATA, FILE, TEXT
+    }
 }

@@ -7,15 +7,19 @@ import android.util.Log;
 import com.dm.dmnetworking.model.progress.FileProgress;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.loopj.android.http.DataAsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestHandle;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
@@ -103,48 +107,134 @@ abstract class DMNetworkBaseAPIClient implements DMNetworkIConstants {
     }
 
     static <T, E> AsyncHttpResponseHandler getHandler(final DMNetworkBaseRequestConfig<T, E> config, final DMNetworkIClientListener listener) {
+
         final AsyncHttpResponseHandler handler;
-        if (config.isEnableDownload()) {
-            handler = new FileAsyncHttpResponseHandler(config.getContext()) {
-                @Override
-                public void onSuccess(final int statusCode, final Header[] headers, final File file) {
-                    listener.onComplete(statusCode, headers, null, file);
-                }
 
-                @Override
-                public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final File file) {
-                    onFailureHandler(statusCode, headers, null, throwable, listener);
-                }
+        if (config.getHttpHandlerType() == null) {
+            config.setHttpHandlerType(HttpHandlerType.JSON);
+        }
 
-                @Override
-                public void onProgress(final long bytesWritten, final long totalSize) {
-                    super.onProgress(bytesWritten, totalSize);
-                    onProgressHandle(bytesWritten, totalSize, listener);
-                }
-            };
-        } else {
-            handler = new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
-                    listener.onComplete(statusCode, headers, jsonObject, null);
-                }
+        switch (config.getHttpHandlerType()) {
+            case JSON:
+                handler = new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
+                        listener.onComplete(statusCode, headers, jsonObject, null);
+                    }
 
-                @Override
-                public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
-                    listener.onFailure(statusCode, headers, throwable, errorResponse);
-                }
+                    @Override
+                    public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
+                        listener.onFailure(statusCode, headers, throwable, errorResponse);
+                    }
 
-                @Override
-                public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
-                    onFailureHandler(statusCode, headers, responseString, throwable, listener);
-                }
+                    @Override
+                    public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
+                        onFailureHandler(statusCode, headers, responseString, throwable, listener);
+                    }
 
-                @Override
-                public void onProgress(final long bytesWritten, final long totalSize) {
-                    super.onProgress(bytesWritten, totalSize);
-                    onProgressHandle(bytesWritten, totalSize, listener);
-                }
-            };
+                    @Override
+                    public void onProgress(final long bytesWritten, final long totalSize) {
+                        super.onProgress(bytesWritten, totalSize);
+                        onProgressHandle(bytesWritten, totalSize, listener);
+                    }
+                };
+                break;
+            case TEXT:
+                handler = new TextHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        onFailureHandler(statusCode, headers, responseString, throwable, listener);
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        try {
+                            listener.onComplete(statusCode, headers, new JSONObject(responseString), null);
+                        } catch (JSONException e) {
+                            listener.onComplete(statusCode, headers, null, null);
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                break;
+            case FILE:
+                handler = new FileAsyncHttpResponseHandler(config.getContext()) {
+                    @Override
+                    public void onSuccess(final int statusCode, final Header[] headers, final File file) {
+                        listener.onComplete(statusCode, headers, null, file);
+                    }
+
+                    @Override
+                    public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final File file) {
+                        onFailureHandler(statusCode, headers, null, throwable, listener);
+                    }
+
+                    @Override
+                    public void onProgress(final long bytesWritten, final long totalSize) {
+                        super.onProgress(bytesWritten, totalSize);
+                        onProgressHandle(bytesWritten, totalSize, listener);
+                    }
+                };
+                break;
+            case DATA:
+                handler = new DataAsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        try {
+                            listener.onComplete(statusCode, headers, new JSONObject(Arrays.toString(responseBody)), null);
+                        } catch (JSONException e) {
+                            listener.onComplete(statusCode, headers, null, null);
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        onFailureHandler(statusCode, headers, Arrays.toString(responseBody), error, listener);
+                    }
+                };
+                break;
+            case BINARY:
+                handler = new BinaryHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
+                        try {
+                            listener.onComplete(statusCode, headers, new JSONObject(Arrays.toString(binaryData)), null);
+                        } catch (JSONException e) {
+                            listener.onComplete(statusCode, headers, null, null);
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] binaryData, Throwable error) {
+                        onFailureHandler(statusCode, headers, Arrays.toString(binaryData), error, listener);
+                    }
+                };
+                break;
+            default:
+                handler = new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(final int statusCode, final Header[] headers, final JSONObject jsonObject) {
+                        listener.onComplete(statusCode, headers, jsonObject, null);
+                    }
+
+                    @Override
+                    public void onFailure(final int statusCode, final Header[] headers, final Throwable throwable, final JSONObject errorResponse) {
+                        listener.onFailure(statusCode, headers, throwable, errorResponse);
+                    }
+
+                    @Override
+                    public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
+                        onFailureHandler(statusCode, headers, responseString, throwable, listener);
+                    }
+
+                    @Override
+                    public void onProgress(final long bytesWritten, final long totalSize) {
+                        super.onProgress(bytesWritten, totalSize);
+                        onProgressHandle(bytesWritten, totalSize, listener);
+                    }
+                };
         }
 
         return handler;
