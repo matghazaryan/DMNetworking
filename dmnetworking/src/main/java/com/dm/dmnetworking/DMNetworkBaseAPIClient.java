@@ -95,6 +95,16 @@ abstract class DMNetworkBaseAPIClient implements DMNetworkIConstants {
         }
     }
 
+    private static void onSuccessHandler(final int statusCode, final Header[] headers, final String responseString, final DMNetworkIClientListener listener) {
+        try {
+            listener.onComplete(statusCode, headers, new JSONObject()
+                    .put(STATUS_CODE, statusCode)
+                    .put(RESPONSE_STRING, responseString), null);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     static StringEntity setEntity(final String jsonString) {
         StringEntity entity = null;
         if (jsonString != null) {
@@ -142,18 +152,13 @@ abstract class DMNetworkBaseAPIClient implements DMNetworkIConstants {
             case TEXT:
                 handler = new TextHttpResponseHandler() {
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    public void onFailure(final int statusCode, final Header[] headers, final String responseString, final Throwable throwable) {
                         onFailureHandler(statusCode, headers, responseString, throwable, listener);
                     }
 
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                        try {
-                            listener.onComplete(statusCode, headers, new JSONObject(responseString), null);
-                        } catch (JSONException e) {
-                            listener.onComplete(statusCode, headers, null, null);
-                            e.printStackTrace();
-                        }
+                    public void onSuccess(final int statusCode, final Header[] headers, final String responseString) {
+                        onSuccessHandler(statusCode, headers, responseString, listener);
                     }
                 };
                 break;
@@ -179,17 +184,12 @@ abstract class DMNetworkBaseAPIClient implements DMNetworkIConstants {
             case DATA:
                 handler = new DataAsyncHttpResponseHandler() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        try {
-                            listener.onComplete(statusCode, headers, new JSONObject(Arrays.toString(responseBody)), null);
-                        } catch (JSONException e) {
-                            listener.onComplete(statusCode, headers, null, null);
-                            e.printStackTrace();
-                        }
+                    public void onSuccess(final int statusCode, final Header[] headers, final byte[] responseBody) {
+                        onSuccessHandler(statusCode, headers, Arrays.toString(responseBody), listener);
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    public void onFailure(final int statusCode, final Header[] headers, final byte[] responseBody, final Throwable error) {
                         onFailureHandler(statusCode, headers, Arrays.toString(responseBody), error, listener);
                     }
                 };
@@ -197,17 +197,12 @@ abstract class DMNetworkBaseAPIClient implements DMNetworkIConstants {
             case BINARY:
                 handler = new BinaryHttpResponseHandler() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
-                        try {
-                            listener.onComplete(statusCode, headers, new JSONObject(Arrays.toString(binaryData)), null);
-                        } catch (JSONException e) {
-                            listener.onComplete(statusCode, headers, null, null);
-                            e.printStackTrace();
-                        }
+                    public void onSuccess(final int statusCode, final Header[] headers, final byte[] binaryData) {
+                        onSuccessHandler(statusCode, headers, Arrays.toString(binaryData), listener);
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] binaryData, Throwable error) {
+                    public void onFailure(final int statusCode, final Header[] headers, final byte[] binaryData, final Throwable error) {
                         onFailureHandler(statusCode, headers, Arrays.toString(binaryData), error, listener);
                     }
                 };
