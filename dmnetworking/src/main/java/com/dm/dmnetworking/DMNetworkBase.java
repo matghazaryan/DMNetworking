@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 abstract class DMNetworkBase implements DMNetworkIBaseMethod {
 
-    protected abstract void handleStatuses(final Context context, final int statusCode, final JSONObject jsonObject, final DMNetworkIStatusHandleListener listener);
+    protected abstract void handleStatuses(final Context context, final int statusCode, final String fullUrl, final JSONObject jsonObject, final DMNetworkIStatusHandleListener listener);
 
     protected abstract int getRequestTimeOut();
 

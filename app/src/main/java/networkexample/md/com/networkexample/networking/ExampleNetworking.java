@@ -28,7 +28,7 @@ public class ExampleNetworking extends DMNetworkBaseRequest {
     }
 
     @Override
-    protected void handleStatuses(final Context context, final int statusCode, final JSONObject jsonObject, final DMNetworkIStatusHandleListener listener) {
+    protected void handleStatuses(final Context context, final int statusCode, final String fullUrl, final JSONObject jsonObject, final DMNetworkIStatusHandleListener listener) {
         try {
             String status = "";
             if (jsonObject != null) {

@@ -55,7 +55,7 @@ abstract class DMNetworkBaseNetworking extends DMNetworkBaseHelper {
 
         showLogs(config.getUrl(), jsonObject, file, jsonType);
 
-        handleStatuses(config.getContext(), statusCode, jsonObject, new DMNetworkIStatusHandleListener() {
+        handleStatuses(config.getContext(), statusCode, config.getUrl(), jsonObject, new DMNetworkIStatusHandleListener() {
             @Override
             public void onComplete(final String status, final JSONObject jsonObject) {
                 if (file == null && jsonObject != null) {
